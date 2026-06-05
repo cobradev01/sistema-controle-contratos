@@ -52,14 +52,17 @@ export default function Layout() {
       <aside className="w-60 flex flex-col flex-shrink-0 border-r" style={{ background: 'var(--bg-sidebar)', borderColor: 'rgba(255,255,255,0.06)' }}>
 
         {/* Logo */}
-        <div className="px-4 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="px-4 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg flex-shrink-0">
-              <Building2 size={15} className="text-white" />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg flex-shrink-0">
+              <Building2 size={16} className="text-white" />
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-white truncate leading-tight">{company?.name || 'Sistema'}</p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">ERP · Contratos</p>
+              <p className="text-sm font-bold text-white truncate leading-tight">{company?.name || 'Sistema'}</p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                <p className="text-[10px] text-gray-400 uppercase tracking-wider font-medium">ERP · Contratos</p>
+              </div>
             </div>
           </div>
         </div>
