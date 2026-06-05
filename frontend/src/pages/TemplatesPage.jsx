@@ -12,7 +12,7 @@ export default function TemplatesPage() {
   useEffect(() => { api.get('/templates').then(r => setTemplates(r.data)); }, []);
 
   return (
-    <div className="p-6 space-y-5">
+    <div className="p-4 sm:p-6 space-y-5">
       <div className="page-header">
         <div>
           <h1 className="page-title">Templates de Contratos</h1>

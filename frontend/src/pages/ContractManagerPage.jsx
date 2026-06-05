@@ -28,7 +28,7 @@ export default function ContractManagerPage() {
   const fmtDate = (d) => d ? format(new Date(d), 'dd/MM/yyyy', { locale: ptBR }) : '—';
 
   return (
-    <div className="p-6 space-y-5">
+    <div className="p-4 sm:p-6 space-y-5">
       <div className="page-header">
         <div>
           <h1 className="page-title">Gerenciador de Contratos</h1>

@@ -11,7 +11,7 @@ export default function SignaturesPage() {
   useEffect(() => { api.get('/signatures/pending').then(r => setContracts(r.data)); }, []);
 
   return (
-    <div className="p-6 space-y-5">
+    <div className="p-4 sm:p-6 space-y-5">
       <div className="page-header">
         <div>
           <h1 className="page-title">Fila de Assinaturas</h1>

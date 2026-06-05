@@ -74,15 +74,15 @@ export default function Dashboard() {
   const obraChart = data.charts.obrasByStatus.map(o => ({ name: o.status, Qtd: o._count }));
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-6">
 
       {/* ── Header ── */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="page-title">Dashboard</h1>
           <p className="page-subtitle">Visão consolidada em tempo real</p>
         </div>
-        <div className="text-xs px-3 py-1.5 rounded-lg border font-medium" style={{ background:'var(--bg-card)', borderColor:'var(--border)', color:'var(--text-muted)' }}>
+        <div className="hidden sm:block text-xs px-3 py-1.5 rounded-lg border font-medium" style={{ background:'var(--bg-card)', borderColor:'var(--border)', color:'var(--text-muted)' }}>
           {new Date().toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long', year:'numeric' })}
         </div>
       </div>

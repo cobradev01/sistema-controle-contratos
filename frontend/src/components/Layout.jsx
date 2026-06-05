@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useThemeStore } from '../store/themeStore';
 import {
   LayoutDashboard, FileText, BookOpen, FilePlus, PenSquare,
   ClipboardCheck, Briefcase, HardHat, ShoppingCart, BarChart3,
-  Users, LogOut, Building2, Sun, Moon,
+  Users, LogOut, Building2, Sun, Moon, Menu, X,
 } from 'lucide-react';
 
 const navGroups = [
@@ -39,20 +40,40 @@ export default function Layout() {
   const { user, company, logout } = useAuthStore();
   const { dark, toggle } = useThemeStore();
   const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   function handleLogout() {
     logout();
     navigate('/login');
   }
 
+  function closeOnMobile() {
+    setSidebarOpen(false);
+  }
+
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: 'var(--bg-app)' }}>
 
-      {/* ── Sidebar ── */}
-      <aside className="w-60 flex flex-col flex-shrink-0 border-r" style={{ background: 'var(--bg-sidebar)', borderColor: 'var(--border)' }}>
+      {/* ── Mobile overlay ── */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
+      {/* ── Sidebar ── */}
+      <aside
+        className={`
+          fixed inset-y-0 left-0 z-40 w-64 flex flex-col flex-shrink-0 border-r
+          transform transition-transform duration-200 ease-in-out
+          lg:relative lg:translate-x-0 lg:w-60
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}
+        style={{ background: 'var(--bg-sidebar)', borderColor: 'var(--border)' }}
+      >
         {/* Logo */}
-        <div className="px-4 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="px-4 py-4 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg flex-shrink-0">
               <Building2 size={16} className="text-white" />
@@ -65,6 +86,13 @@ export default function Layout() {
               </div>
             </div>
           </div>
+          {/* Close button (mobile only) */}
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden p-1.5 rounded-lg hover:bg-white/10 text-gray-400"
+          >
+            <X size={16} />
+          </button>
         </div>
 
         {/* Nav */}
@@ -78,6 +106,7 @@ export default function Layout() {
                     <NavLink
                       to={to}
                       end={to !== '/contratos/novo'}
+                      onClick={closeOnMobile}
                       className={({ isActive }) =>
                         `flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-100 group ${
                           isActive
@@ -103,7 +132,6 @@ export default function Layout() {
 
         {/* Footer */}
         <div className="p-3" style={{ borderTop: '1px solid var(--border)' }}>
-          {/* Theme toggle */}
           <button
             onClick={toggle}
             className="w-full flex items-center gap-2 hover:bg-white/5 text-xs px-3 py-2 rounded-lg transition-all mb-1"
@@ -134,9 +162,31 @@ export default function Layout() {
       </aside>
 
       {/* ── Main ── */}
-      <main className="flex-1 overflow-y-auto">
-        <Outlet />
-      </main>
+      <div className="flex-1 flex flex-col overflow-hidden">
+
+        {/* Mobile top bar */}
+        <header
+          className="lg:hidden flex items-center gap-3 px-4 py-3 border-b flex-shrink-0"
+          style={{ background: 'var(--bg-sidebar)', borderColor: 'var(--border)' }}
+        >
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="p-2 rounded-lg hover:bg-white/10 text-gray-400"
+          >
+            <Menu size={18} />
+          </button>
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+              <Building2 size={13} className="text-white" />
+            </div>
+            <span className="text-sm font-bold text-white truncate">{company?.name || 'Sistema'}</span>
+          </div>
+        </header>
+
+        <main className="flex-1 overflow-y-auto">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

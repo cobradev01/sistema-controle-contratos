@@ -28,7 +28,7 @@ export default function ContractsPage() {
   const fmtDate = (d) => d ? format(new Date(d), 'dd/MM/yy', { locale: ptBR }) : '—';
 
   return (
-    <div className="p-6 space-y-5">
+    <div className="p-4 sm:p-6 space-y-5">
       <div className="page-header">
         <div>
           <h1 className="page-title">Contratos</h1>
@@ -40,16 +40,16 @@ export default function ContractsPage() {
       </div>
 
       {/* Filters */}
-      <div className="card p-4 flex flex-wrap gap-3">
-        <div className="relative flex-1 min-w-48">
+      <div className="card p-4 flex flex-col sm:flex-row flex-wrap gap-3">
+        <div className="relative flex-1 min-w-0">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-secondary)' }} />
           <input className="input pl-9 h-9" placeholder="Buscar por título ou parte..." value={search} onChange={e => setSearch(e.target.value)} />
         </div>
-        <select className="input w-52 h-9" value={status} onChange={e => setStatus(e.target.value)}>
+        <select className="input sm:w-52 h-9" value={status} onChange={e => setStatus(e.target.value)}>
           <option value="">Todos os status</option>
           {Object.entries(STATUS_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
-        <select className="input w-48 h-9" value={type} onChange={e => setType(e.target.value)}>
+        <select className="input sm:w-48 h-9" value={type} onChange={e => setType(e.target.value)}>
           <option value="">Todos os tipos</option>
           {Object.entries(TYPE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>

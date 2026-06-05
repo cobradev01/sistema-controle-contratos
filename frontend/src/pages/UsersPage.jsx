@@ -40,7 +40,7 @@ export default function UsersPage() {
   }
 
   return (
-    <div className="p-6 space-y-5">
+    <div className="p-4 sm:p-6 space-y-5">
       <div className="page-header">
         <div>
           <h1 className="page-title">Gestão de Usuários</h1>

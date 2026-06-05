@@ -135,7 +135,7 @@
   /* ═══ TABLES ═══ */
   .table-wrapper {
     border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border);
-    box-shadow: var(--shadow-card); overflow: hidden;
+    box-shadow: var(--shadow-card); overflow-x: auto;
   }
   .table { @apply w-full text-sm; }
   .table thead tr { border-bottom: 1px solid var(--border); background: var(--bg-elevated); }
@@ -146,7 +146,7 @@
   .table tbody td { @apply px-5 py-3.5; color: var(--text-secondary); }
 
   /* ═══ PAGE HEADER ═══ */
-  .page-header   { @apply flex items-center justify-between mb-6; }
+  .page-header   { @apply flex flex-wrap items-center justify-between gap-3 mb-6; }
   .page-title    { @apply text-xl font-bold tracking-tight; color: var(--text-primary); }
   .page-subtitle { @apply text-sm mt-0.5; color: var(--text-muted); }
 
