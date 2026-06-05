@@ -84,10 +84,14 @@ export default function LoginPage() {
             {isSubmitting ? 'Entrando...' : 'Entrar'}
           </button>
 
-          <p className="text-center text-sm text-gray-600">
-            Não tem conta?{' '}
-            <Link to="/register" className="text-blue-500 hover:text-blue-400 font-medium">Cadastrar empresa</Link>
-          </p>
+          <div className="flex items-center justify-between text-sm">
+            <Link to="/esqueci-senha" className="text-blue-500 hover:text-blue-600 font-medium transition-colors">
+              Esqueceu a senha?
+            </Link>
+            <Link to="/register" className="transition-colors font-medium" style={{ color: 'var(--text-muted)' }}>
+              Cadastrar empresa
+            </Link>
+          </div>
         </form>
 
         <div className="mt-4 p-3 rounded-lg border" style={{ background: 'var(--bg-elevated)', borderColor: 'var(--border)' }}>

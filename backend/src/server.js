@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 
 const authRoutes = require('./routes/auth');
+const passwordResetRoutes = require('./routes/passwordReset');
 const contractRoutes = require('./routes/contracts');
 const templateRoutes = require('./routes/templates');
 const signatureRoutes = require('./routes/signatures');
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/auth', passwordResetRoutes);
 app.use('/api/contracts', contractRoutes);
 app.use('/api/templates', templateRoutes);
 app.use('/api/signatures', signatureRoutes);
