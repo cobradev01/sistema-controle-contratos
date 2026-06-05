@@ -4,8 +4,17 @@ import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
 import { Building2, AlertCircle, LogIn } from 'lucide-react';
 
+function formatCNPJ(value) {
+  const digits = value.replace(/\D/g, '').slice(0, 14);
+  return digits
+    .replace(/^(\d{2})(\d)/, '$1.$2')
+    .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+    .replace(/\.(\d{3})(\d)/, '.$1/$2')
+    .replace(/(\d{4})(\d)/, '$1-$2');
+}
+
 export default function LoginPage() {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+  const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm();
   const { login } = useAuthStore();
   const navigate = useNavigate();
 
@@ -20,13 +29,11 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'var(--bg-app)' }}>
-      {/* Background glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-3xl" />
       </div>
 
       <div className="w-full max-w-sm relative">
-        {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-600 rounded-xl mb-4 shadow-lg shadow-blue-900/50">
             <Building2 size={22} className="text-white" />
@@ -35,18 +42,23 @@ export default function LoginPage() {
           <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>Contratos & Gestão de Obras</p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)}
-          className="card border-white/[0.08] space-y-4 p-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="card border-white/[0.08] space-y-4 p-6">
 
           <div>
             <label className="label">CNPJ da Empresa</label>
             <input
-              className={`input ${errors.cnpj ? 'input-error' : ''}`}
+              className={`input font-mono ${errors.cnpj ? 'input-error' : ''}`}
               placeholder="00.000.000/0001-00"
+              maxLength={18}
               {...register('cnpj', {
                 required: 'CNPJ obrigatório',
-                minLength: { value: 14, message: 'CNPJ deve ter pelo menos 14 caracteres' },
+                validate: v => v.replace(/\D/g, '').length === 14 || 'CNPJ deve ter 14 dígitos',
               })}
+              onChange={e => {
+                const formatted = formatCNPJ(e.target.value);
+                e.target.value = formatted;
+                setValue('cnpj', formatted);
+              }}
             />
             {errors.cnpj && <p className="field-error"><AlertCircle size={12} />{errors.cnpj.message}</p>}
           </div>

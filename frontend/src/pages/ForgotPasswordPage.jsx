@@ -4,10 +4,19 @@ import { useForm } from 'react-hook-form';
 import api from '../lib/api';
 import { Building2, AlertCircle, ArrowLeft, Mail, CheckCircle2 } from 'lucide-react';
 
+function formatCNPJ(value) {
+  const digits = value.replace(/\D/g, '').slice(0, 14);
+  return digits
+    .replace(/^(\d{2})(\d)/, '$1.$2')
+    .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+    .replace(/\.(\d{3})(\d)/, '.$1/$2')
+    .replace(/(\d{4})(\d)/, '$1-$2');
+}
+
 export default function ForgotPasswordPage() {
   const [sent, setSent] = useState(false);
   const [resetLink, setResetLink] = useState(null);
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+  const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm();
 
   async function onSubmit(data) {
     try {
@@ -71,12 +80,18 @@ export default function ForgotPasswordPage() {
             <div>
               <label className="label">CNPJ da Empresa</label>
               <input
-                className={`input ${errors.cnpj ? 'input-error' : ''}`}
+                className={`input font-mono ${errors.cnpj ? 'input-error' : ''}`}
                 placeholder="00.000.000/0001-00"
+                maxLength={18}
                 {...register('cnpj', {
                   required: 'CNPJ obrigatório',
-                  minLength: { value: 14, message: 'CNPJ inválido' },
+                  validate: v => v.replace(/\D/g, '').length === 14 || 'CNPJ deve ter 14 dígitos',
                 })}
+                onChange={e => {
+                  const formatted = formatCNPJ(e.target.value);
+                  e.target.value = formatted;
+                  setValue('cnpj', formatted);
+                }}
               />
               {errors.cnpj && <p className="field-error"><AlertCircle size={12} />{errors.cnpj.message}</p>}
             </div>

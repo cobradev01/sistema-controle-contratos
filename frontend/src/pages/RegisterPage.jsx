@@ -4,6 +4,15 @@ import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
 import { Building2, AlertCircle } from 'lucide-react';
 
+function formatCNPJ(value) {
+  const digits = value.replace(/\D/g, '').slice(0, 14);
+  return digits
+    .replace(/^(\d{2})(\d)/, '$1.$2')
+    .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+    .replace(/\.(\d{3})(\d)/, '.$1/$2')
+    .replace(/(\d{4})(\d)/, '$1-$2');
+}
+
 function Field({ label, error, children }) {
   return (
     <div>
@@ -15,7 +24,7 @@ function Field({ label, error, children }) {
 }
 
 export default function RegisterPage() {
-  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm();
+  const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm();
   const { register: registerUser } = useAuthStore();
   const navigate = useNavigate();
 
@@ -52,12 +61,18 @@ export default function RegisterPage() {
                   {...register('companyName', { required: 'Razão social obrigatória', minLength: { value: 3, message: 'Mínimo 3 caracteres' } })} />
               </Field>
               <Field label="CNPJ *" error={errors.companyCnpj?.message}>
-                <input className={`input ${errors.companyCnpj ? 'input-error' : ''}`}
+                <input className={`input font-mono ${errors.companyCnpj ? 'input-error' : ''}`}
                   placeholder="00.000.000/0001-00"
+                  maxLength={18}
                   {...register('companyCnpj', {
                     required: 'CNPJ obrigatório',
-                    minLength: { value: 14, message: 'CNPJ inválido' },
-                  })} />
+                    validate: v => v.replace(/\D/g, '').length === 14 || 'CNPJ deve ter 14 dígitos',
+                  })}
+                  onChange={e => {
+                    const formatted = formatCNPJ(e.target.value);
+                    e.target.value = formatted;
+                    setValue('companyCnpj', formatted);
+                  }} />
               </Field>
               <Field label="E-mail da Empresa *" error={errors.companyEmail?.message}>
                 <input className={`input ${errors.companyEmail ? 'input-error' : ''}`}
