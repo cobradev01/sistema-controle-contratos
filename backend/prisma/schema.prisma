@@ -1,0 +1,389 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id        String   @id @default(uuid())
+  name      String
+  cnpj      String   @unique
+  email     String
+  phone     String?
+  address   String?
+  logoUrl   String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users             User[]
+  contracts         Contract[]
+  contractTemplates ContractTemplate[]
+  obras             Obra[]
+  purchaseOrders    PurchaseOrder[]
+  auditLogs         AuditLog[]
+
+  @@map("companies")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  companyId String
+  name      String
+  email     String
+  password  String
+  role      UserRole @default(USER)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company           Company            @relation(fields: [companyId], references: [id])
+  contracts         Contract[]
+  auditLogs         AuditLog[]
+  signatureRequests SignatureRequest[]
+
+  @@unique([email, companyId])
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  USER
+}
+
+model ContractTemplate {
+  id          String   @id @default(uuid())
+  companyId   String
+  name        String
+  type        ContractType
+  description String?
+  content     String   @db.Text
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  company   Company                 @relation(fields: [companyId], references: [id])
+  fields    ContractTemplateField[]
+  contracts Contract[]
+
+  @@map("contract_templates")
+}
+
+model ContractTemplateField {
+  id         String    @id @default(uuid())
+  templateId String
+  name       String
+  label      String
+  type       FieldType
+  required   Boolean   @default(false)
+  options    Json?
+  order      Int       @default(0)
+  createdAt  DateTime  @default(now())
+
+  template ContractTemplate @relation(fields: [templateId], references: [id])
+
+  @@map("contract_template_fields")
+}
+
+enum FieldType {
+  TEXT
+  NUMBER
+  DATE
+  EMAIL
+  PHONE
+  CPF
+  CNPJ
+  ADDRESS
+  CURRENCY
+  SIGNATURE
+  SELECT
+  TEXTAREA
+}
+
+model Contract {
+  id           String         @id @default(uuid())
+  companyId    String
+  templateId   String?
+  createdById  String
+  title        String
+  type         ContractType
+  status       ContractStatus @default(DRAFT)
+  content      String         @db.Text
+  fieldValues  Json?
+  relatedParty String
+  relatedDoc   String?
+  value        Decimal?       @db.Decimal(15, 2)
+  startDate    DateTime?
+  endDate      DateTime?
+  signedAt     DateTime?
+  archivedAt   DateTime?
+  notes        String?        @db.Text
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  company           Company            @relation(fields: [companyId], references: [id])
+  template          ContractTemplate?  @relation(fields: [templateId], references: [id])
+  createdBy         User               @relation(fields: [createdById], references: [id])
+  signatureRequests SignatureRequest[]
+  obras             Obra[]
+  uploads           Upload[]
+  auditLogs         AuditLog[]
+
+  @@map("contracts")
+}
+
+enum ContractType {
+  SERVICE
+  WORK
+  EMPLOYMENT
+  LEASE
+  PURCHASE
+  OTHER
+}
+
+enum ContractStatus {
+  DRAFT
+  PENDING_SIGNATURE
+  SIGNED
+  ACTIVE
+  EXPIRING
+  EXPIRED
+  CANCELLED
+  ARCHIVED
+}
+
+model SignatureRequest {
+  id          String              @id @default(uuid())
+  contractId  String
+  requestedBy String
+  signerName  String
+  signerEmail String?
+  signerPhone String?
+  channel     SignatureChannel
+  status      SignatureStatus     @default(PENDING)
+  token       String              @unique @default(uuid())
+  expiresAt   DateTime
+  sentAt      DateTime?
+  viewedAt    DateTime?
+  signedAt    DateTime?
+  ipAddress   String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  contract    Contract @relation(fields: [contractId], references: [id])
+  requestedByUser User @relation(fields: [requestedBy], references: [id])
+
+  @@map("signature_requests")
+}
+
+enum SignatureChannel {
+  EMAIL
+  WHATSAPP
+  BOTH
+}
+
+enum SignatureStatus {
+  PENDING
+  SENT
+  VIEWED
+  SIGNED
+  EXPIRED
+  CANCELLED
+}
+
+model Obra {
+  id          String      @id @default(uuid())
+  companyId   String
+  contractId  String?
+  name        String
+  description String?     @db.Text
+  address     String
+  status      ObraStatus  @default(PLANNING)
+  budget      Decimal     @db.Decimal(15, 2)
+  totalCost   Decimal     @default(0) @db.Decimal(15, 2)
+  startDate   DateTime?
+  endDate     DateTime?
+  responsible String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  company        Company         @relation(fields: [companyId], references: [id])
+  contract       Contract?       @relation(fields: [contractId], references: [id])
+  steps          ObraStep[]
+  vistorias      ObraVistoria[]
+  custos         ObraCusto[]
+  purchaseOrders PurchaseOrder[]
+  uploads        Upload[]
+  auditLogs      AuditLog[]
+
+  @@map("obras")
+}
+
+enum ObraStatus {
+  PLANNING
+  IN_PROGRESS
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+model ObraStep {
+  id          String         @id @default(uuid())
+  obraId      String
+  name        String
+  description String?
+  phase       ObraPhase
+  status      StepStatus     @default(PENDING)
+  order       Int            @default(0)
+  startDate   DateTime?
+  endDate     DateTime?
+  completedAt DateTime?
+  notes       String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  obra Obra @relation(fields: [obraId], references: [id])
+
+  @@map("obra_steps")
+}
+
+enum ObraPhase {
+  PLANNING
+  EXECUTION
+  DELIVERY
+}
+
+enum StepStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+}
+
+model ObraVistoria {
+  id          String        @id @default(uuid())
+  obraId      String
+  type        VistoriaType
+  date        DateTime
+  inspector   String
+  description String        @db.Text
+  status      String        @default("PENDING")
+  notes       String?       @db.Text
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  obra    Obra     @relation(fields: [obraId], references: [id])
+  uploads Upload[]
+
+  @@map("obra_vistorias")
+}
+
+enum VistoriaType {
+  INITIAL
+  PROGRESS
+  FINAL
+}
+
+model ObraCusto {
+  id          String        @id @default(uuid())
+  obraId      String
+  category    CostCategory
+  description String
+  value       Decimal       @db.Decimal(15, 2)
+  date        DateTime
+  supplier    String?
+  invoice     String?
+  notes       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  obra Obra @relation(fields: [obraId], references: [id])
+
+  @@map("obra_custos")
+}
+
+enum CostCategory {
+  MATERIAL
+  LABOR
+  EQUIPMENT
+  SERVICE
+  TRANSPORT
+  OTHER
+}
+
+model PurchaseOrder {
+  id            String          @id @default(uuid())
+  companyId     String
+  obraId        String
+  number        String          @unique
+  status        POStatus        @default(DRAFT)
+  payerCnpj     String
+  payerName     String
+  supplierName  String
+  supplierCnpj  String?
+  items         Json
+  totalValue    Decimal         @db.Decimal(15, 2)
+  notes         String?         @db.Text
+  issuedAt      DateTime?
+  approvedAt    DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id])
+  obra    Obra    @relation(fields: [obraId], references: [id])
+  uploads Upload[]
+
+  @@map("purchase_orders")
+}
+
+enum POStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  SENT
+  COMPLETED
+  CANCELLED
+}
+
+model Upload {
+  id          String   @id @default(uuid())
+  entityType  String
+  entityId    String
+  filename    String
+  originalName String
+  mimetype    String
+  size        Int
+  url         String
+  createdAt   DateTime @default(now())
+
+  contract      Contract?      @relation(fields: [entityId], references: [id], map: "upload_contract")
+  obra          Obra?          @relation(fields: [entityId], references: [id], map: "upload_obra")
+  vistoria      ObraVistoria?  @relation(fields: [entityId], references: [id], map: "upload_vistoria")
+  purchaseOrder PurchaseOrder? @relation(fields: [entityId], references: [id], map: "upload_po")
+
+  @@map("uploads")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  companyId  String
+  userId     String?
+  entityType String
+  entityId   String
+  action     String
+  oldValues  Json?
+  newValues  Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  company Company  @relation(fields: [companyId], references: [id])
+  user    User?    @relation(fields: [userId], references: [id])
+  contract Contract? @relation(fields: [entityId], references: [id], map: "audit_contract")
+  obra     Obra?     @relation(fields: [entityId], references: [id], map: "audit_obra")
+
+  @@map("audit_logs")
+}
