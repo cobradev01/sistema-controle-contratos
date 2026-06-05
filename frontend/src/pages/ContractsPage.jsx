@@ -45,11 +45,11 @@ export default function ContractsPage() {
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-secondary)' }} />
           <input className="input pl-9 h-9" placeholder="Buscar por título ou parte..." value={search} onChange={e => setSearch(e.target.value)} />
         </div>
-        <select className="input w-44 h-9" value={status} onChange={e => setStatus(e.target.value)}>
+        <select className="input w-52 h-9" value={status} onChange={e => setStatus(e.target.value)}>
           <option value="">Todos os status</option>
           {Object.entries(STATUS_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
-        <select className="input w-40 h-9" value={type} onChange={e => setType(e.target.value)}>
+        <select className="input w-48 h-9" value={type} onChange={e => setType(e.target.value)}>
           <option value="">Todos os tipos</option>
           {Object.entries(TYPE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>

@@ -31,7 +31,7 @@ export default function LoginPage() {
           <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-600 rounded-xl mb-4 shadow-lg shadow-blue-900/50">
             <Building2 size={22} className="text-white" />
           </div>
-          <h1 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>Sistema GLC</h1>
+          <h1 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>B2B — Soluções Financeiras</h1>
           <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>Contratos & Gestão de Obras</p>
         </div>
 
