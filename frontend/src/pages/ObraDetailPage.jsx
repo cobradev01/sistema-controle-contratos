@@ -55,7 +55,7 @@ export default function ObraDetailPage() {
     load();
   }
 
-  if (!obra) return <div className="p-8 text-center text-gray-500">Carregando...</div>;
+  if (!obra) return <div className="p-8 text-center" style={{ color: 'var(--text-muted)' }}>Carregando...</div>;
 
   const fmt = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
   const fmtDate = (d) => d ? format(new Date(d), 'dd/MM/yyyy', { locale: ptBR }) : '—';
@@ -73,10 +73,10 @@ export default function ObraDetailPage() {
   return (
     <div className="p-8 max-w-6xl mx-auto space-y-6">
       <div className="flex items-center gap-4">
-        <button onClick={() => navigate('/obras')} className="text-gray-500 hover:text-gray-800"><ArrowLeft size={20} /></button>
+        <button onClick={() => navigate('/obras')} className="btn-ghost p-2" style={{ color: 'var(--text-muted)' }}><ArrowLeft size={20} /></button>
         <div className="flex-1">
-          <h1 className="text-2xl font-bold text-gray-900">{obra.name}</h1>
-          <p className="text-gray-500 text-sm">{obra.address}</p>
+          <h1 className="page-title">{obra.name}</h1>
+          <p className="page-subtitle">{obra.address}</p>
         </div>
       </div>
 
@@ -88,21 +88,23 @@ export default function ObraDetailPage() {
           { label: 'Status', value: obra.status },
         ].map(({ label, value }) => (
           <div key={label} className="card py-4">
-            <p className="text-xs text-gray-500 uppercase">{label}</p>
-            <p className={`font-bold text-lg ${label === '% Utilizado' && budgetPct > 90 ? 'text-red-600' : 'text-gray-900'}`}>{value}</p>
+            <p className="text-xs uppercase" style={{ color: 'var(--text-muted)' }}>{label}</p>
+            <p className={`font-bold text-lg ${label === '% Utilizado' && budgetPct > 90 ? 'text-red-500' : ''}`}
+              style={!(label === '% Utilizado' && budgetPct > 90) ? { color: 'var(--text-primary)' } : {}}>{value}</p>
           </div>
         ))}
       </div>
 
-      <div className="w-full bg-gray-200 rounded-full h-2">
-        <div className={`h-2 rounded-full transition-all ${budgetPct > 90 ? 'bg-red-500' : budgetPct > 70 ? 'bg-yellow-500' : 'bg-green-500'}`}
+      <div className="progress-bar">
+        <div className={`progress-fill transition-all ${budgetPct > 90 ? 'bg-red-500' : budgetPct > 70 ? 'bg-amber-500' : 'bg-emerald-500'}`}
           style={{ width: `${Math.min(budgetPct, 100)}%` }} />
       </div>
 
-      <div className="flex gap-1 border-b">
+      <div className="flex gap-1 border-b" style={{ borderColor: 'var(--border)' }}>
         {tabs.map(t => (
           <button key={t.id} onClick={() => setActiveTab(t.id)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === t.id ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === t.id ? 'border-blue-500 text-blue-500' : 'border-transparent hover:text-gray-600'}`}
+            style={activeTab !== t.id ? { color: 'var(--text-muted)' } : {}}>
             {t.label}
           </button>
         ))}
@@ -112,15 +114,16 @@ export default function ObraDetailPage() {
         <div className="space-y-6">
           {phases.map(phase => (
             <div key={phase}>
-              <h3 className="font-semibold text-gray-700 mb-3">{PHASE_LABELS[phase]}</h3>
+              <h3 className="font-semibold mb-3" style={{ color: 'var(--text-secondary)' }}>{PHASE_LABELS[phase]}</h3>
               <div className="space-y-2">
                 {obra.steps?.filter(s => s.phase === phase).map(step => (
-                  <div key={step.id} className="flex items-center gap-3 p-3 bg-white rounded-lg border hover:shadow-sm transition-shadow">
+                  <div key={step.id} className="flex items-center gap-3 p-3 rounded-lg border hover:shadow-sm transition-shadow" style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}>
                     <button onClick={() => updateStep(step.id, step.status === 'COMPLETED' ? 'PENDING' : 'COMPLETED')}>
-                      {step.status === 'COMPLETED' ? <CheckCircle size={20} className="text-green-500" /> : <Circle size={20} className="text-gray-300" />}
+                      {step.status === 'COMPLETED' ? <CheckCircle size={20} className="text-emerald-500" /> : <Circle size={20} style={{ color: 'var(--text-muted)' }} />}
                     </button>
-                    <span className={`flex-1 text-sm ${step.status === 'COMPLETED' ? 'line-through text-gray-400' : 'text-gray-800'}`}>{step.name}</span>
-                    <span className="text-xs text-gray-400">{step.completedAt ? fmtDate(step.completedAt) : ''}</span>
+                    <span className={`flex-1 text-sm ${step.status === 'COMPLETED' ? 'line-through' : ''}`}
+                      style={{ color: step.status === 'COMPLETED' ? 'var(--text-muted)' : 'var(--text-primary)' }}>{step.name}</span>
+                    <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{step.completedAt ? fmtDate(step.completedAt) : ''}</span>
                   </div>
                 ))}
               </div>
@@ -134,24 +137,37 @@ export default function ObraDetailPage() {
           <div className="flex justify-end mb-4">
             <button onClick={() => setShowCustoModal(true)} className="btn-primary flex items-center gap-2"><Plus size={15} /> Lançar Custo</button>
           </div>
-          <table className="w-full text-sm">
-            <thead><tr className="border-b text-xs text-gray-500 uppercase"><th className="pb-2 text-left font-medium">Descrição</th><th className="pb-2 text-left font-medium">Categoria</th><th className="pb-2 text-left font-medium">Fornecedor</th><th className="pb-2 text-left font-medium">Data</th><th className="pb-2 text-right font-medium">Valor</th></tr></thead>
-            <tbody className="divide-y">
+          <table className="table w-full text-sm">
+            <thead>
+              <tr>
+                <th>Descrição</th>
+                <th>Categoria</th>
+                <th>Fornecedor</th>
+                <th>Data</th>
+                <th className="text-right">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
               {obra.custos?.map(c => (
-                <tr key={c.id} className="hover:bg-gray-50">
-                  <td className="py-2">{c.description}</td>
-                  <td className="py-2 text-gray-500">{COST_CATEGORIES[c.category]}</td>
-                  <td className="py-2 text-gray-500">{c.supplier || '—'}</td>
-                  <td className="py-2 text-gray-500">{fmtDate(c.date)}</td>
-                  <td className="py-2 text-right font-medium">{fmt(c.value)}</td>
+                <tr key={c.id}>
+                  <td style={{ color: 'var(--text-primary)' }}>{c.description}</td>
+                  <td style={{ color: 'var(--text-secondary)' }}>{COST_CATEGORIES[c.category]}</td>
+                  <td style={{ color: 'var(--text-secondary)' }}>{c.supplier || '—'}</td>
+                  <td style={{ color: 'var(--text-secondary)' }}>{fmtDate(c.date)}</td>
+                  <td className="text-right font-medium" style={{ color: 'var(--text-primary)' }}>{fmt(c.value)}</td>
                 </tr>
               ))}
             </tbody>
             {obra.custos?.length > 0 && (
-              <tfoot><tr className="border-t"><td colSpan={4} className="pt-2 text-sm font-semibold text-gray-700">Total</td><td className="pt-2 text-right font-bold text-gray-900">{fmt(obra.totalCost)}</td></tr></tfoot>
+              <tfoot>
+                <tr className="border-t" style={{ borderColor: 'var(--border)' }}>
+                  <td colSpan={4} className="pt-2 text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>Total</td>
+                  <td className="pt-2 text-right font-bold" style={{ color: 'var(--text-primary)' }}>{fmt(obra.totalCost)}</td>
+                </tr>
+              </tfoot>
             )}
           </table>
-          {obra.custos?.length === 0 && <div className="text-center py-8 text-gray-500">Nenhum custo registrado</div>}
+          {obra.custos?.length === 0 && <div className="text-center py-8" style={{ color: 'var(--text-muted)' }}>Nenhum custo registrado</div>}
         </div>
       )}
 
@@ -165,12 +181,12 @@ export default function ObraDetailPage() {
               <div key={v.id} className="card">
                 <div className="flex items-center justify-between mb-2">
                   <span className={`badge-${v.type === 'INITIAL' ? 'draft' : v.type === 'FINAL' ? 'signed' : 'pending'}`}>{v.type === 'INITIAL' ? 'Vistoria Inicial' : v.type === 'FINAL' ? 'Vistoria Final' : 'Progresso'}</span>
-                  <span className="text-sm text-gray-500">{fmtDate(v.date)} — {v.inspector}</span>
+                  <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{fmtDate(v.date)} — {v.inspector}</span>
                 </div>
-                <p className="text-sm text-gray-700">{v.description}</p>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{v.description}</p>
               </div>
             ))}
-            {obra.vistorias?.length === 0 && <div className="text-center py-8 text-gray-500">Nenhuma vistoria registrada</div>}
+            {obra.vistorias?.length === 0 && <div className="text-center py-8" style={{ color: 'var(--text-muted)' }}>Nenhuma vistoria registrada</div>}
           </div>
         </div>
       )}
@@ -184,54 +200,58 @@ export default function ObraDetailPage() {
             {obra.purchaseOrders?.map(po => (
               <div key={po.id} className="card flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-gray-900">{po.number}</p>
-                  <p className="text-sm text-gray-500">Fornecedor: {po.supplierName}</p>
+                  <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{po.number}</p>
+                  <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Fornecedor: {po.supplierName}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-gray-900">{fmt(po.totalValue)}</p>
+                  <p className="font-bold" style={{ color: 'var(--text-primary)' }}>{fmt(po.totalValue)}</p>
                   <span className="badge-draft">{po.status}</span>
                 </div>
               </div>
             ))}
-            {obra.purchaseOrders?.length === 0 && <div className="text-center py-8 text-gray-500">Nenhuma ordem de compra</div>}
+            {obra.purchaseOrders?.length === 0 && <div className="text-center py-8" style={{ color: 'var(--text-muted)' }}>Nenhuma ordem de compra</div>}
           </div>
         </div>
       )}
 
       {/* Modals */}
       {showCustoModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <form onSubmit={addCusto} className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl space-y-4">
-            <h3 className="font-bold text-lg">Lançar Custo</h3>
-            <div>
-              <label className="label">Categoria</label>
-              <select className="input" value={custo.category} onChange={e => setCusto({ ...custo, category: e.target.value })}>
-                {Object.entries(COST_CATEGORIES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-              </select>
+        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowCustoModal(false)}>
+          <form onSubmit={addCusto} className="modal max-w-md w-full space-y-4">
+            <div className="modal-header">
+              <h3 className="font-bold" style={{ color: 'var(--text-primary)' }}>Lançar Custo</h3>
             </div>
-            <div>
-              <label className="label">Descrição *</label>
-              <input className="input" value={custo.description} onChange={e => setCusto({ ...custo, description: e.target.value })} required />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="modal-body space-y-4">
               <div>
-                <label className="label">Valor (R$) *</label>
-                <CurrencyInput
-                  value={custo.value}
-                  onChange={v => setCusto({ ...custo, value: v })}
-                  required
-                />
+                <label className="label">Categoria</label>
+                <select className="input" value={custo.category} onChange={e => setCusto({ ...custo, category: e.target.value })}>
+                  {Object.entries(COST_CATEGORIES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                </select>
               </div>
               <div>
-                <label className="label">Data *</label>
-                <input className="input" type="date" value={custo.date} onChange={e => setCusto({ ...custo, date: e.target.value })} required />
+                <label className="label">Descrição *</label>
+                <input className="input" value={custo.description} onChange={e => setCusto({ ...custo, description: e.target.value })} required />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="label">Valor (R$) *</label>
+                  <CurrencyInput
+                    value={custo.value}
+                    onChange={v => setCusto({ ...custo, value: v })}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="label">Data *</label>
+                  <input className="input" type="date" value={custo.date} onChange={e => setCusto({ ...custo, date: e.target.value })} required />
+                </div>
+              </div>
+              <div>
+                <label className="label">Fornecedor</label>
+                <input className="input" value={custo.supplier} onChange={e => setCusto({ ...custo, supplier: e.target.value })} />
               </div>
             </div>
-            <div>
-              <label className="label">Fornecedor</label>
-              <input className="input" value={custo.supplier} onChange={e => setCusto({ ...custo, supplier: e.target.value })} />
-            </div>
-            <div className="flex gap-3">
+            <div className="modal-footer">
               <button type="button" onClick={() => setShowCustoModal(false)} className="btn-secondary flex-1">Cancelar</button>
               <button type="submit" className="btn-primary flex-1">Salvar</button>
             </div>
@@ -240,32 +260,36 @@ export default function ObraDetailPage() {
       )}
 
       {showVistoriaModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <form onSubmit={addVistoria} className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl space-y-4">
-            <h3 className="font-bold text-lg">Nova Vistoria</h3>
-            <div>
-              <label className="label">Tipo</label>
-              <select className="input" value={vistoria.type} onChange={e => setVistoria({ ...vistoria, type: e.target.value })}>
-                <option value="INITIAL">Vistoria Inicial</option>
-                <option value="PROGRESS">Progresso</option>
-                <option value="FINAL">Vistoria Final</option>
-              </select>
+        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowVistoriaModal(false)}>
+          <form onSubmit={addVistoria} className="modal max-w-md w-full space-y-4">
+            <div className="modal-header">
+              <h3 className="font-bold" style={{ color: 'var(--text-primary)' }}>Nova Vistoria</h3>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="modal-body space-y-4">
               <div>
-                <label className="label">Data *</label>
-                <input className="input" type="date" value={vistoria.date} onChange={e => setVistoria({ ...vistoria, date: e.target.value })} required />
+                <label className="label">Tipo</label>
+                <select className="input" value={vistoria.type} onChange={e => setVistoria({ ...vistoria, type: e.target.value })}>
+                  <option value="INITIAL">Vistoria Inicial</option>
+                  <option value="PROGRESS">Progresso</option>
+                  <option value="FINAL">Vistoria Final</option>
+                </select>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="label">Data *</label>
+                  <input className="input" type="date" value={vistoria.date} onChange={e => setVistoria({ ...vistoria, date: e.target.value })} required />
+                </div>
+                <div>
+                  <label className="label">Vistoriador *</label>
+                  <input className="input" value={vistoria.inspector} onChange={e => setVistoria({ ...vistoria, inspector: e.target.value })} required />
+                </div>
               </div>
               <div>
-                <label className="label">Vistoriador *</label>
-                <input className="input" value={vistoria.inspector} onChange={e => setVistoria({ ...vistoria, inspector: e.target.value })} required />
+                <label className="label">Descrição *</label>
+                <textarea className="input" rows={4} value={vistoria.description} onChange={e => setVistoria({ ...vistoria, description: e.target.value })} required />
               </div>
             </div>
-            <div>
-              <label className="label">Descrição *</label>
-              <textarea className="input" rows={4} value={vistoria.description} onChange={e => setVistoria({ ...vistoria, description: e.target.value })} required />
-            </div>
-            <div className="flex gap-3">
+            <div className="modal-footer">
               <button type="button" onClick={() => setShowVistoriaModal(false)} className="btn-secondary flex-1">Cancelar</button>
               <button type="submit" className="btn-primary flex-1">Salvar</button>
             </div>
@@ -274,39 +298,43 @@ export default function ObraDetailPage() {
       )}
 
       {showPOModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <form onSubmit={createPO} className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl space-y-4 max-h-screen overflow-y-auto">
-            <h3 className="font-bold text-lg">Nova Ordem de Compra</h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="label">CNPJ Pagador *</label>
-                <input className="input" value={poForm.payerCnpj} onChange={e => setPoForm({ ...poForm, payerCnpj: e.target.value })} required />
-              </div>
-              <div>
-                <label className="label">Nome Pagador *</label>
-                <input className="input" value={poForm.payerName} onChange={e => setPoForm({ ...poForm, payerName: e.target.value })} required />
-              </div>
-              <div>
-                <label className="label">Fornecedor *</label>
-                <input className="input" value={poForm.supplierName} onChange={e => setPoForm({ ...poForm, supplierName: e.target.value })} required />
-              </div>
-              <div>
-                <label className="label">CNPJ Fornecedor</label>
-                <input className="input" value={poForm.supplierCnpj} onChange={e => setPoForm({ ...poForm, supplierCnpj: e.target.value })} />
-              </div>
+        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowPOModal(false)}>
+          <form onSubmit={createPO} className="modal max-w-lg w-full space-y-4 max-h-screen overflow-y-auto">
+            <div className="modal-header">
+              <h3 className="font-bold" style={{ color: 'var(--text-primary)' }}>Nova Ordem de Compra</h3>
             </div>
-            <div>
-              <label className="label">Itens</label>
-              {poForm.items.map((item, i) => (
-                <div key={i} className="grid grid-cols-3 gap-2 mb-2">
-                  <input className="input col-span-1" placeholder="Descrição" value={item.description} onChange={e => { const n = [...poForm.items]; n[i].description = e.target.value; setPoForm({ ...poForm, items: n }); }} />
-                  <input className="input" type="number" placeholder="Qtd" value={item.quantity} onChange={e => { const n = [...poForm.items]; n[i].quantity = Number(e.target.value); setPoForm({ ...poForm, items: n }); }} />
-                  <CurrencyInput placeholder="R$ 0,00" value={item.unitPrice} onChange={v => { const n = [...poForm.items]; n[i].unitPrice = v; setPoForm({ ...poForm, items: n }); }} />
+            <div className="modal-body space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="label">CNPJ Pagador *</label>
+                  <input className="input" value={poForm.payerCnpj} onChange={e => setPoForm({ ...poForm, payerCnpj: e.target.value })} required />
                 </div>
-              ))}
-              <button type="button" onClick={() => setPoForm({ ...poForm, items: [...poForm.items, { description: '', quantity: 1, unitPrice: 0 }] })} className="text-blue-600 text-sm hover:underline">+ Item</button>
+                <div>
+                  <label className="label">Nome Pagador *</label>
+                  <input className="input" value={poForm.payerName} onChange={e => setPoForm({ ...poForm, payerName: e.target.value })} required />
+                </div>
+                <div>
+                  <label className="label">Fornecedor *</label>
+                  <input className="input" value={poForm.supplierName} onChange={e => setPoForm({ ...poForm, supplierName: e.target.value })} required />
+                </div>
+                <div>
+                  <label className="label">CNPJ Fornecedor</label>
+                  <input className="input" value={poForm.supplierCnpj} onChange={e => setPoForm({ ...poForm, supplierCnpj: e.target.value })} />
+                </div>
+              </div>
+              <div>
+                <label className="label">Itens</label>
+                {poForm.items.map((item, i) => (
+                  <div key={i} className="grid grid-cols-3 gap-2 mb-2">
+                    <input className="input col-span-1" placeholder="Descrição" value={item.description} onChange={e => { const n = [...poForm.items]; n[i].description = e.target.value; setPoForm({ ...poForm, items: n }); }} />
+                    <input className="input" type="number" placeholder="Qtd" value={item.quantity} onChange={e => { const n = [...poForm.items]; n[i].quantity = Number(e.target.value); setPoForm({ ...poForm, items: n }); }} />
+                    <CurrencyInput placeholder="R$ 0,00" value={item.unitPrice} onChange={v => { const n = [...poForm.items]; n[i].unitPrice = v; setPoForm({ ...poForm, items: n }); }} />
+                  </div>
+                ))}
+                <button type="button" onClick={() => setPoForm({ ...poForm, items: [...poForm.items, { description: '', quantity: 1, unitPrice: 0 }] })} className="text-blue-500 text-sm hover:underline">+ Item</button>
+              </div>
             </div>
-            <div className="flex gap-3">
+            <div className="modal-footer">
               <button type="button" onClick={() => setShowPOModal(false)} className="btn-secondary flex-1">Cancelar</button>
               <button type="submit" className="btn-primary flex-1">Criar O.C.</button>
             </div>

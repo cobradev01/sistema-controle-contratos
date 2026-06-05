@@ -64,11 +64,11 @@ export default function ObrasPage() {
               </div>
               <span className={STATUS_BADGE[o.status] || 'badge-draft'}>{STATUS_LABELS[o.status]}</span>
             </div>
-            <h3 className="font-medium text-gray-200 group-hover:text-white transition-colors">{o.name}</h3>
-            <p className="text-xs text-gray-600 mt-0.5 truncate">{o.address}</p>
+            <h3 className="font-medium group-hover:text-white transition-colors" style={{ color: 'var(--text-primary)' }}>{o.name}</h3>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{o.address}</p>
 
             <div className="mt-4 space-y-1.5">
-              <div className="flex justify-between text-xs text-gray-600">
+              <div className="flex justify-between text-xs" style={{ color: 'var(--text-muted)' }}>
                 <span>Orçamento utilizado</span>
                 <span className={o.budgetPercent > 90 ? 'text-red-400' : o.budgetPercent > 70 ? 'text-amber-400' : 'text-emerald-400'}>
                   {o.budgetPercent}%
@@ -79,8 +79,8 @@ export default function ObrasPage() {
                   style={{ width: `${Math.min(o.budgetPercent, 100)}%` }} />
               </div>
               <div className="flex justify-between text-xs mt-0.5">
-                <span className="text-gray-700">{fmt(o.totalCost)}</span>
-                <span className="text-gray-500">{fmt(o.budget)}</span>
+                <span style={{ color: 'var(--text-muted)' }}>{fmt(o.totalCost)}</span>
+                <span style={{ color: 'var(--text-secondary)' }}>{fmt(o.budget)}</span>
               </div>
             </div>
           </Link>
@@ -88,9 +88,9 @@ export default function ObrasPage() {
       </div>
 
       {obras.length === 0 && (
-        <div className="text-center py-20 text-gray-700">
+        <div className="text-center py-20" style={{ color: 'var(--text-muted)' }}>
           <HardHat size={40} className="mx-auto mb-3" />
-          <p className="text-sm font-medium text-gray-600">Nenhuma obra cadastrada</p>
+          <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Nenhuma obra cadastrada</p>
           <button onClick={() => setShowModal(true)} className="text-sm text-blue-500 hover:text-blue-400 mt-1">Criar primeira obra →</button>
         </div>
       )}
@@ -99,7 +99,7 @@ export default function ObrasPage() {
         <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
           <form onSubmit={handleSubmit(onSubmit)} className="modal max-w-lg w-full">
             <div className="modal-header">
-              <h3 className="font-semibold text-gray-100">Nova Obra</h3>
+              <h3 className="font-bold" style={{ color: 'var(--text-primary)' }}>Nova Obra</h3>
               <button type="button" onClick={() => setShowModal(false)} className="btn-ghost p-1.5"><X size={16} /></button>
             </div>
             <div className="modal-body">

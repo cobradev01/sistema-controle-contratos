@@ -84,8 +84,8 @@ export default function NewContractPage() {
               <div className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-medium transition-all ${
                 step === i + 1 ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
                 : step > i + 1 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                : 'text-gray-700 border border-transparent'
-              }`}>
+                : 'border border-transparent'
+              }`} style={step <= i + 1 && step !== i + 1 ? { color: 'var(--text-muted)' } : {}}>
                 {step > i + 1 ? <CheckCircle size={11} /> : <span className="w-4 h-4 rounded-full border border-current flex items-center justify-center text-[10px]">{i+1}</span>}
                 {s}
               </div>
@@ -98,7 +98,7 @@ export default function NewContractPage() {
       {/* STEP 1 — Template */}
       {step === 1 && (
         <div className="space-y-4">
-          <p className="text-sm text-gray-400">Escolha um modelo para começar ou crie do zero</p>
+          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Escolha um modelo para começar ou crie do zero</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {templates.map(t => (
               <button key={t.id} onClick={() => selectTemplate(t)}
@@ -108,8 +108,8 @@ export default function NewContractPage() {
                     <BookOpen size={15} className="text-blue-400" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-200">{t.name}</p>
-                    <p className="text-xs text-gray-600 mt-0.5">{t.description}</p>
+                    <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{t.name}</p>
+                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{t.description}</p>
                     <p className="text-xs text-blue-500 mt-2">{t.fields?.length} campos dinâmicos</p>
                   </div>
                 </div>
@@ -119,11 +119,11 @@ export default function NewContractPage() {
               className="card text-left hover:border-white/10 transition-all cursor-pointer border-dashed border-white/[0.06]">
               <div className="flex items-start gap-3">
                 <div className="p-2 bg-white/[0.04] rounded-lg border border-white/[0.08]">
-                  <FilePlus size={15} className="text-gray-500" />
+                  <FilePlus size={15} style={{ color: 'var(--text-muted)' }} />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-400">Contrato em branco</p>
-                  <p className="text-xs text-gray-600 mt-0.5">Escreva seu próprio conteúdo</p>
+                  <p className="font-medium" style={{ color: 'var(--text-secondary)' }}>Contrato em branco</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>Escreva seu próprio conteúdo</p>
                 </div>
               </div>
             </button>
@@ -260,8 +260,8 @@ export default function NewContractPage() {
                 { l: 'Encerramento', v: watch('endDate') || '—' },
               ].map(({ l, v }) => (
                 <div key={l}>
-                  <span className="text-gray-600">{l}: </span>
-                  <span className="text-gray-200 font-medium">{v}</span>
+                  <span style={{ color: 'var(--text-muted)' }}>{l}: </span>
+                  <span className="font-medium" style={{ color: 'var(--text-primary)' }}>{v}</span>
                 </div>
               ))}
             </div>

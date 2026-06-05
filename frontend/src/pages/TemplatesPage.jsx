@@ -28,15 +28,15 @@ export default function TemplatesPage() {
                 <BookOpen size={15} />
               </div>
               <div className="flex-1">
-                <p className="font-medium text-gray-200">{t.name}</p>
+                <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{t.name}</p>
                 <span className={`inline-flex items-center mt-1 px-2 py-0.5 rounded text-[10px] font-medium border ${TYPE_COLORS[t.type] || TYPE_COLORS.OTHER}`}>
                   {TYPE_LABELS[t.type]}
                 </span>
               </div>
             </div>
-            <p className="text-sm text-gray-600 leading-relaxed">{t.description}</p>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{t.description}</p>
             <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/[0.05]">
-              <span className="text-xs text-gray-700">{t.fields?.length || 0} campos dinâmicos</span>
+              <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{t.fields?.length || 0} campos dinâmicos</span>
               <Link to="/contratos/novo"
                 className="flex items-center gap-1 text-xs text-blue-500 hover:text-blue-400 font-medium transition-colors group-hover:gap-1.5">
                 Usar template <ArrowRight size={11} />
@@ -47,10 +47,10 @@ export default function TemplatesPage() {
       </div>
 
       {templates.length === 0 && (
-        <div className="text-center py-20 text-gray-700">
+        <div className="text-center py-20" style={{ color: 'var(--text-muted)' }}>
           <BookOpen size={40} className="mx-auto mb-3" />
-          <p className="text-sm text-gray-600 font-medium">Nenhum template disponível</p>
-          <p className="text-xs text-gray-700 mt-1">Execute o seed do banco para criar templates padrão</p>
+          <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Nenhum template disponível</p>
+          <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>Execute o seed do banco para criar templates padrão</p>
         </div>
       )}
     </div>

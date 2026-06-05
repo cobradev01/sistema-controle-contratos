@@ -32,45 +32,49 @@ export default function SignPage() {
     }
   }
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-500">Carregando...</div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-app)', color: 'var(--text-muted)' }}>
+      Carregando...
+    </div>
+  );
 
   if (error) return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-app)' }}>
       <div className="card max-w-md w-full text-center">
-        <p className="text-red-600 font-semibold text-lg">{error}</p>
-        <p className="text-gray-500 text-sm mt-2">Este link pode ter expirado ou já foi utilizado.</p>
+        <p className="text-red-500 font-semibold text-lg">{error}</p>
+        <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>Este link pode ter expirado ou já foi utilizado.</p>
       </div>
     </div>
   );
 
   if (signed) return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-app)' }}>
       <div className="card max-w-md w-full text-center">
-        <CheckCircle size={48} className="text-green-500 mx-auto mb-4" />
-        <h2 className="text-xl font-bold text-gray-900">Contrato Assinado!</h2>
-        <p className="text-gray-500 mt-2">Sua assinatura foi registrada com sucesso.</p>
+        <CheckCircle size={48} className="text-emerald-500 mx-auto mb-4" />
+        <h2 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Contrato Assinado!</h2>
+        <p className="mt-2" style={{ color: 'var(--text-muted)' }}>Sua assinatura foi registrada com sucesso.</p>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 flex items-start justify-center">
+    <div className="min-h-screen p-4 flex items-start justify-center" style={{ background: 'var(--bg-app)' }}>
       <div className="max-w-2xl w-full space-y-4 mt-8">
         <div className="card text-center">
-          <FileText size={40} className="text-blue-600 mx-auto mb-3" />
-          <h1 className="text-xl font-bold text-gray-900">Solicitação de Assinatura</h1>
-          <p className="text-gray-500 mt-1">Olá, <strong>{data?.request?.signerName}</strong>! Você recebeu um contrato para assinar.</p>
+          <FileText size={40} className="text-blue-500 mx-auto mb-3" />
+          <h1 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Solicitação de Assinatura</h1>
+          <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>Olá, <strong>{data?.request?.signerName}</strong>! Você recebeu um contrato para assinar.</p>
         </div>
 
         <div className="card">
-          <h2 className="font-semibold text-gray-900 mb-3">{data?.contract?.title}</h2>
-          <div className="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
-            <pre className="text-sm text-gray-700 whitespace-pre-wrap font-sans">{data?.contract?.content}</pre>
+          <h2 className="font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>{data?.contract?.title}</h2>
+          <div className="rounded-lg p-4 max-h-96 overflow-y-auto" style={{ background: 'var(--bg-elevated)' }}>
+            <pre className="text-sm whitespace-pre-wrap font-sans" style={{ color: 'var(--text-secondary)' }}>{data?.contract?.content}</pre>
           </div>
         </div>
 
         <div className="card">
-          <p className="text-sm text-gray-600 mb-4">Ao clicar em "Assinar Contrato", você confirma que leu e concorda com os termos acima. Sua assinatura eletrônica será registrada com data, hora e endereço IP.</p>
+          <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>Ao clicar em "Assinar Contrato", você confirma que leu e concorda com os termos acima. Sua assinatura eletrônica será registrada com data, hora e endereço IP.</p>
           <button onClick={handleSign} className="btn-primary w-full text-base py-3" disabled={signing}>
             {signing ? 'Assinando...' : 'Assinar Contrato'}
           </button>

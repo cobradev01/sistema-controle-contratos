@@ -15,7 +15,7 @@ function SignerForm({ index, register, errors, remove, canRemove }) {
   return (
     <div className="bg-white/[0.02] rounded-lg p-4 border border-white/[0.06] space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Signatário {index + 1}</p>
+        <p className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Signatário {index + 1}</p>
         {canRemove && <button type="button" onClick={remove} className="btn-ghost p-1"><X size={13} /></button>}
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -75,7 +75,7 @@ export default function ContractDetailPage() {
   }
 
   if (!contract) return (
-    <div className="flex items-center justify-center h-full text-gray-600 text-sm">Carregando...</div>
+    <div className="flex items-center justify-center h-full text-sm" style={{ color: 'var(--text-secondary)' }}>Carregando...</div>
   );
 
   const fmt = (v) => v ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v) : '—';
@@ -87,7 +87,7 @@ export default function ContractDetailPage() {
       <div className="flex items-start gap-3">
         <button onClick={() => navigate('/contratos')} className="btn-ghost p-2 mt-0.5"><ArrowLeft size={16} /></button>
         <div className="flex-1 min-w-0">
-          <h1 className="page-title truncate">{contract.title}</h1>
+          <h1 className="page-title">{contract.title}</h1>
           <p className="page-subtitle">{contract.relatedParty}</p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -114,8 +114,8 @@ export default function ContractDetailPage() {
           { l: 'Encerramento', v: fmtDate(contract.endDate) },
         ].map(({ l, v }) => (
           <div key={l} className="card-sm">
-            <p className="text-xs text-gray-600 uppercase tracking-wider">{l}</p>
-            <p className="text-sm font-medium text-gray-200 mt-1">{v}</p>
+            <p className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>{l}</p>
+            <p className="text-sm font-medium mt-1" style={{ color: 'var(--text-primary)' }}>{v}</p>
           </div>
         ))}
       </div>
@@ -123,7 +123,7 @@ export default function ContractDetailPage() {
       <div className="grid grid-cols-3 gap-4">
         {/* Content */}
         <div className="col-span-2 card">
-          <p className="text-xs text-gray-600 uppercase tracking-wider mb-3">Conteúdo do Contrato</p>
+          <p className="text-xs uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>Conteúdo do Contrato</p>
           <div className="bg-[#1e2130] rounded-lg p-4 max-h-[480px] overflow-y-auto border border-white/[0.05]">
             <pre className="text-sm text-gray-400 whitespace-pre-wrap font-sans leading-relaxed">{contract.content}</pre>
           </div>
@@ -132,9 +132,9 @@ export default function ContractDetailPage() {
         {/* Sidebar */}
         <div className="space-y-4">
           <div className="card">
-            <p className="text-xs text-gray-600 uppercase tracking-wider mb-3">Assinaturas</p>
+            <p className="text-xs uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>Assinaturas</p>
             {contract.signatureRequests?.length === 0 ? (
-              <p className="text-sm text-gray-700">Nenhuma solicitação enviada</p>
+              <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Nenhuma solicitação enviada</p>
             ) : (
               <ul className="space-y-2">
                 {contract.signatureRequests?.map(r => {
@@ -145,8 +145,8 @@ export default function ContractDetailPage() {
                     <li key={r.id} className="flex items-start gap-2 py-2 border-b border-white/[0.04] last:border-0">
                       <Icon size={14} className={`${color} mt-0.5 flex-shrink-0`} />
                       <div>
-                        <p className="text-sm text-gray-300">{r.signerName}</p>
-                        <p className="text-xs text-gray-600">{r.signerEmail}</p>
+                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{r.signerName}</p>
+                        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{r.signerEmail}</p>
                         <span className={`badge-${r.status === 'SIGNED' ? 'active' : r.status === 'EXPIRED' ? 'expired' : 'pending'} mt-1`}>{r.status}</span>
                       </div>
                     </li>
@@ -158,7 +158,7 @@ export default function ContractDetailPage() {
 
           {contract.obras?.length > 0 && (
             <div className="card">
-              <p className="text-xs text-gray-600 uppercase tracking-wider mb-3">Obras Vinculadas</p>
+              <p className="text-xs uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>Obras Vinculadas</p>
               <ul className="space-y-1.5">
                 {contract.obras.map(o => (
                   <li key={o.id}>
@@ -176,7 +176,7 @@ export default function ContractDetailPage() {
         <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowSendModal(false)}>
           <form onSubmit={handleSubmit(sendSignature)} className="modal max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="modal-header">
-              <h3 className="font-semibold text-gray-100">Enviar para Assinatura</h3>
+              <h3 className="font-bold" style={{ color: 'var(--text-primary)' }}>Enviar para Assinatura</h3>
               <button type="button" onClick={() => setShowSendModal(false)} className="btn-ghost p-1.5"><X size={16} /></button>
             </div>
             <div className="modal-body space-y-3">

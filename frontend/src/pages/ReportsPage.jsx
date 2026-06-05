@@ -52,9 +52,9 @@ export default function ReportsPage() {
             { label: 'Variação Orçamentária', value: fmt(financial.budgetVariance), sub: financial.budgetVariance >= 0 ? 'Dentro do orçamento' : 'Acima do orçamento' },
           ].map(({ label, value, sub }) => (
             <div key={label} className="card">
-              <p className="text-xs text-gray-600 uppercase tracking-wider">{label}</p>
-              <p className="text-xl font-semibold text-gray-100 mt-1 font-mono">{value}</p>
-              <p className="text-xs text-gray-700 mt-0.5">{sub}</p>
+              <p className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>{label}</p>
+              <p className="text-xl font-semibold mt-1 font-mono" style={{ color: 'var(--text-primary)' }}>{value}</p>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{sub}</p>
             </div>
           ))}
         </div>
@@ -62,7 +62,7 @@ export default function ReportsPage() {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <div className="card">
-          <p className="text-sm font-medium text-gray-300 mb-4">Contratos por Status</p>
+          <p className="text-sm font-medium mb-4" style={{ color: 'var(--text-secondary)' }}>Contratos por Status</p>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={contractChart} barSize={24}>
               <XAxis dataKey="name" tick={{ fill: '#4b5563', fontSize: 10 }} axisLine={false} tickLine={false} />
@@ -74,9 +74,9 @@ export default function ReportsPage() {
         </div>
 
         <div className="card">
-          <p className="text-sm font-medium text-gray-300 mb-4">Obras — Previsto vs. Realizado</p>
+          <p className="text-sm font-medium mb-4" style={{ color: 'var(--text-secondary)' }}>Obras — Previsto vs. Realizado</p>
           {obraChart.length === 0 ? (
-            <div className="flex items-center justify-center h-48 text-gray-700">
+            <div className="flex items-center justify-center h-48" style={{ color: 'var(--text-muted)' }}>
               <p className="text-sm">Nenhuma obra cadastrada</p>
             </div>
           ) : (
@@ -96,7 +96,7 @@ export default function ReportsPage() {
       {contractReport && contractReport.contracts.length > 0 && (
         <div className="table-wrapper">
           <div className="px-5 py-4 border-b border-white/[0.06]">
-            <p className="text-sm font-medium text-gray-300">Contratos — Detalhe</p>
+            <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Contratos — Detalhe</p>
           </div>
           <table className="table">
             <thead>
@@ -111,8 +111,8 @@ export default function ReportsPage() {
             <tbody>
               {contractReport.contracts.map(c => (
                 <tr key={c.id}>
-                  <td className="font-medium text-gray-200">{c.title}</td>
-                  <td className="text-gray-500">{c.relatedParty}</td>
+                  <td className="font-medium" style={{ color: 'var(--text-primary)' }}>{c.title}</td>
+                  <td style={{ color: 'var(--text-secondary)' }}>{c.relatedParty}</td>
                   <td><span className="badge-info">{c.type}</span></td>
                   <td className="font-mono text-sm">{c.value ? fmt(c.value) : '—'}</td>
                   <td><span className="badge-draft">{c.status}</span></td>

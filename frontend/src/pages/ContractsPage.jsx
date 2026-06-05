@@ -42,7 +42,7 @@ export default function ContractsPage() {
       {/* Filters */}
       <div className="card p-4 flex flex-wrap gap-3">
         <div className="relative flex-1 min-w-48">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-secondary)' }} />
           <input className="input pl-9 h-9" placeholder="Buscar por título ou parte..." value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <select className="input w-44 h-9" value={status} onChange={e => setStatus(e.target.value)}>
@@ -58,11 +58,11 @@ export default function ContractsPage() {
       {/* Table */}
       <div className="table-wrapper">
         {loading ? (
-          <div className="text-center py-12 text-gray-600 text-sm">Carregando...</div>
+          <div className="text-center py-12 text-sm" style={{ color: 'var(--text-secondary)' }}>Carregando...</div>
         ) : contracts.length === 0 ? (
-          <div className="text-center py-16 text-gray-600">
-            <FileText size={36} className="mx-auto mb-3 text-gray-700" />
-            <p className="text-sm font-medium text-gray-500">Nenhum contrato encontrado</p>
+          <div className="text-center py-16" style={{ color: 'var(--text-secondary)' }}>
+            <FileText size={36} className="mx-auto mb-3" style={{ color: 'var(--text-muted)' }} />
+            <p className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Nenhum contrato encontrado</p>
             <Link to="/contratos/novo" className="text-sm text-blue-500 hover:text-blue-400 mt-1 inline-block">Criar primeiro contrato →</Link>
           </div>
         ) : (
@@ -83,14 +83,14 @@ export default function ContractsPage() {
                 <tr key={c.id}>
                   <td>
                     <Link to={`/contratos/${c.id}`} className="text-blue-400 hover:text-blue-300 font-medium transition-colors">{c.title}</Link>
-                    <p className="text-xs text-gray-600 mt-0.5">{c.relatedParty}</p>
+                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{c.relatedParty}</p>
                   </td>
                   <td><span className="badge-info">{TYPE_LABELS[c.type]}</span></td>
                   <td className="font-mono text-sm">{fmt(c.value)}</td>
-                  <td className="text-gray-500">{fmtDate(c.startDate)}</td>
-                  <td className="text-gray-500">{fmtDate(c.endDate)}</td>
+                  <td style={{ color: 'var(--text-muted)' }}>{fmtDate(c.startDate)}</td>
+                  <td style={{ color: 'var(--text-muted)' }}>{fmtDate(c.endDate)}</td>
                   <td>
-                    {c.daysRemaining === null ? <span className="text-gray-700">—</span>
+                    {c.daysRemaining === null ? <span style={{ color: 'var(--text-muted)' }}>—</span>
                       : c.daysRemaining < 0 ? <span className="text-red-400 text-xs font-medium">Vencido</span>
                       : c.daysRemaining <= 30 ? <span className="text-amber-400 text-xs font-medium">{c.daysRemaining}d</span>
                       : <span className="text-emerald-400 text-xs">{c.daysRemaining}d</span>}

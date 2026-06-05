@@ -32,10 +32,10 @@ export default function PurchaseOrdersPage() {
 
       <div className="table-wrapper">
         {orders.length === 0 ? (
-          <div className="text-center py-16 text-gray-700">
+          <div className="text-center py-16" style={{ color: 'var(--text-muted)' }}>
             <ShoppingCart size={36} className="mx-auto mb-3" />
-            <p className="text-sm text-gray-600">Nenhuma ordem de compra</p>
-            <p className="text-xs text-gray-700 mt-1">Crie ordens a partir do detalhe de uma obra</p>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Nenhuma ordem de compra</p>
+            <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>Crie ordens a partir do detalhe de uma obra</p>
           </div>
         ) : (
           <table className="table">
@@ -53,17 +53,17 @@ export default function PurchaseOrdersPage() {
             <tbody>
               {orders.map(o => (
                 <tr key={o.id}>
-                  <td><span className="font-mono text-xs text-gray-300 bg-white/[0.04] px-2 py-0.5 rounded">{o.number}</span></td>
-                  <td className="text-gray-400">{o.obra?.name || '—'}</td>
+                  <td><span className="font-mono text-xs bg-white/[0.04] px-2 py-0.5 rounded" style={{ color: 'var(--text-secondary)' }}>{o.number}</span></td>
+                  <td style={{ color: 'var(--text-secondary)' }}>{o.obra?.name || '—'}</td>
                   <td>
-                    <p className="text-gray-200 font-medium">{o.supplierName}</p>
-                    {o.supplierCnpj && <p className="text-xs text-gray-600 font-mono">{o.supplierCnpj}</p>}
+                    <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{o.supplierName}</p>
+                    {o.supplierCnpj && <p className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>{o.supplierCnpj}</p>}
                   </td>
                   <td>
-                    <p className="text-gray-400 text-sm">{o.payerName}</p>
-                    <p className="text-xs text-gray-600 font-mono">{o.payerCnpj}</p>
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{o.payerName}</p>
+                    <p className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>{o.payerCnpj}</p>
                   </td>
-                  <td className="text-right font-mono font-semibold text-gray-200">{fmt(o.totalValue)}</td>
+                  <td className="text-right font-mono font-semibold" style={{ color: 'var(--text-primary)' }}>{fmt(o.totalValue)}</td>
                   <td><span className={STATUS_BADGE[o.status] || 'badge-draft'}>{STATUS_LABELS[o.status]}</span></td>
                   <td>
                     <div className="flex gap-2">

@@ -10,7 +10,7 @@ const STATUS_BADGE  = { DRAFT: 'badge-draft', PENDING_SIGNATURE: 'badge-pending'
 const TYPE_LABELS   = { SERVICE: 'Serviço', WORK: 'Obra', EMPLOYMENT: 'Trabalho', LEASE: 'Locação', PURCHASE: 'Compra', OTHER: 'Outro' };
 
 function VigenciaCell({ days }) {
-  if (days === null) return <span className="text-gray-700">—</span>;
+  if (days === null) return <span style={{ color: 'var(--text-muted)' }}>—</span>;
   if (days < 0) return <span className="badge-expired">Vencido</span>;
   if (days <= 30) return <span className="badge-pending">{days} dias</span>;
   if (days <= 90) return <span className="text-amber-400 text-xs">{days} dias</span>;
@@ -47,7 +47,8 @@ export default function ContractManagerPage() {
           if (!count) return null;
           return (
             <button key={k} onClick={() => setFilter(filter === k ? '' : k)}
-              className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${filter === k ? 'bg-blue-600/20 border-blue-500/30 text-blue-400' : 'bg-white/[0.03] border-white/[0.06] text-gray-500 hover:border-white/10'}`}>
+              className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${filter === k ? 'bg-blue-600/20 border-blue-500/30 text-blue-400' : 'bg-white/[0.03] border-white/[0.06] hover:border-white/10'}`}
+              style={filter !== k ? { color: 'var(--text-muted)' } : {}}>
               {v} <span className="ml-1 font-bold">{count}</span>
             </button>
           );
@@ -56,9 +57,9 @@ export default function ContractManagerPage() {
 
       <div className="table-wrapper">
         {filtered.length === 0 ? (
-          <div className="text-center py-16 text-gray-700">
+          <div className="text-center py-16" style={{ color: 'var(--text-muted)' }}>
             <Briefcase size={36} className="mx-auto mb-3" />
-            <p className="text-sm text-gray-600">Nenhum contrato encontrado</p>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Nenhum contrato encontrado</p>
           </div>
         ) : (
           <table className="table min-w-[900px]">
@@ -78,13 +79,13 @@ export default function ContractManagerPage() {
               {filtered.map(c => (
                 <tr key={c.id}>
                   <td>
-                    <p className="text-gray-200 font-medium">{c.relatedParty}</p>
-                    <p className="text-xs text-gray-600 mt-0.5">{c.title}</p>
+                    <p className="font-medium" style={{ color: 'var(--text-primary)' }}>{c.relatedParty}</p>
+                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{c.title}</p>
                   </td>
                   <td><span className="badge-info">{TYPE_LABELS[c.type]}</span></td>
-                  <td className="font-mono text-sm text-gray-300">{fmt(c.value)}</td>
-                  <td className="text-gray-500">{fmtDate(c.startDate)}</td>
-                  <td className="text-gray-500">{fmtDate(c.endDate)}</td>
+                  <td className="font-mono text-sm" style={{ color: 'var(--text-secondary)' }}>{fmt(c.value)}</td>
+                  <td style={{ color: 'var(--text-muted)' }}>{fmtDate(c.startDate)}</td>
+                  <td style={{ color: 'var(--text-muted)' }}>{fmtDate(c.endDate)}</td>
                   <td><VigenciaCell days={c.daysRemaining} /></td>
                   <td><span className={STATUS_BADGE[c.status] || 'badge-draft'}>{STATUS_LABELS[c.status]}</span></td>
                   <td>

@@ -30,14 +30,14 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0b0d13] flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'var(--bg-app)' }}>
       <div className="w-full max-w-lg">
         <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center w-10 h-10 bg-blue-600 rounded-xl mb-3">
             <Building2 size={18} className="text-white" />
           </div>
-          <h1 className="text-lg font-semibold text-gray-100">Cadastrar Empresa</h1>
-          <p className="text-sm text-gray-600 mt-1">Crie sua conta no sistema GLC</p>
+          <h1 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Cadastrar Empresa</h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>Crie sua conta no sistema GLC</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="card border-white/[0.08] p-6 space-y-5">
@@ -104,7 +104,7 @@ export default function RegisterPage() {
             {isSubmitting ? 'Criando conta...' : 'Criar conta'}
           </button>
 
-          <p className="text-center text-sm text-gray-600">
+          <p className="text-center text-sm" style={{ color: 'var(--text-muted)' }}>
             Já tem conta?{' '}
             <Link to="/login" className="text-blue-500 hover:text-blue-400 font-medium">Entrar</Link>
           </p>

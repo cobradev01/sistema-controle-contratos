@@ -20,9 +20,9 @@ export default function SignaturesPage() {
       </div>
 
       {contracts.length === 0 ? (
-        <div className="text-center py-20 text-gray-700">
-          <CheckCircle size={40} className="mx-auto mb-3 text-emerald-700" />
-          <p className="text-sm text-gray-600 font-medium">Nenhum contrato aguardando assinatura</p>
+        <div className="text-center py-20" style={{ color: 'var(--text-muted)' }}>
+          <CheckCircle size={40} className="mx-auto mb-3 text-emerald-500" />
+          <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Nenhum contrato aguardando assinatura</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -31,7 +31,7 @@ export default function SignaturesPage() {
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <Link to={`/contratos/${c.id}`} className="font-medium text-blue-400 hover:text-blue-300 transition-colors">{c.title}</Link>
-                  <p className="text-xs text-gray-600 mt-0.5">{c.relatedParty}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{c.relatedParty}</p>
                 </div>
                 <span className="badge-pending">Aguardando</span>
               </div>
@@ -43,8 +43,8 @@ export default function SignaturesPage() {
                     <div key={r.id} className="flex items-center gap-3 bg-white/[0.02] rounded-lg px-3 py-2.5 border border-white/[0.04]">
                       <Icon size={15} className={s.color} />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-300 font-medium truncate">{r.signerName}</p>
-                        <p className="text-xs text-gray-600 truncate">{r.signerEmail}</p>
+                        <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>{r.signerName}</p>
+                        <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>{r.signerEmail}</p>
                       </div>
                       <span className={s.badge}>{r.status}</span>
                     </div>

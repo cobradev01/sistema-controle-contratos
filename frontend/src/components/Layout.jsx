@@ -49,19 +49,19 @@ export default function Layout() {
     <div className="flex h-screen overflow-hidden" style={{ background: 'var(--bg-app)' }}>
 
       {/* ── Sidebar ── */}
-      <aside className="w-60 flex flex-col flex-shrink-0 border-r" style={{ background: 'var(--bg-sidebar)', borderColor: 'rgba(255,255,255,0.06)' }}>
+      <aside className="w-60 flex flex-col flex-shrink-0 border-r" style={{ background: 'var(--bg-sidebar)', borderColor: 'var(--border)' }}>
 
         {/* Logo */}
-        <div className="px-4 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+        <div className="px-4 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg flex-shrink-0">
               <Building2 size={16} className="text-white" />
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-bold text-white truncate leading-tight">{company?.name || 'Sistema'}</p>
+              <p className="text-sm font-bold truncate leading-tight" style={{ color: 'var(--text-primary)' }}>{company?.name || 'Sistema'}</p>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-                <p className="text-[10px] text-gray-400 uppercase tracking-wider font-medium">ERP · Contratos</p>
+                <p className="text-[10px] uppercase tracking-wider font-medium" style={{ color: 'var(--text-muted)' }}>ERP · Contratos</p>
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@ export default function Layout() {
         <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-5">
           {navGroups.map((group) => (
             <div key={group.label}>
-              <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-widest px-3 mb-1.5">{group.label}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-widest px-3 mb-1.5" style={{ color: 'var(--text-muted)' }}>{group.label}</p>
               <ul className="space-y-0.5">
                 {group.items.map(({ to, icon: Icon, label }) => (
                   <li key={to}>
@@ -81,14 +81,15 @@ export default function Layout() {
                       className={({ isActive }) =>
                         `flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-100 group ${
                           isActive
-                            ? 'bg-blue-600/20 text-blue-400'
-                            : 'text-gray-500 hover:bg-white/5 hover:text-gray-300'
+                            ? 'bg-blue-600/20 text-blue-500'
+                            : 'hover:bg-white/5'
                         }`
                       }
+                      style={({ isActive }) => isActive ? {} : { color: 'var(--text-muted)' }}
                     >
                       {({ isActive }) => (
                         <>
-                          <Icon size={14} className={isActive ? 'text-blue-400' : 'text-gray-600 group-hover:text-gray-400'} />
+                          <Icon size={14} className={isActive ? 'text-blue-500' : ''} style={!isActive ? { color: 'var(--text-muted)' } : {}} />
                           {label}
                         </>
                       )}
@@ -101,11 +102,12 @@ export default function Layout() {
         </nav>
 
         {/* Footer */}
-        <div className="p-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="p-3" style={{ borderTop: '1px solid var(--border)' }}>
           {/* Theme toggle */}
           <button
             onClick={toggle}
-            className="w-full flex items-center gap-2 text-gray-500 hover:text-gray-300 hover:bg-white/5 text-xs px-3 py-2 rounded-lg transition-all mb-1"
+            className="w-full flex items-center gap-2 hover:bg-white/5 text-xs px-3 py-2 rounded-lg transition-all mb-1"
+            style={{ color: 'var(--text-muted)' }}
           >
             {dark ? <Sun size={13} /> : <Moon size={13} />}
             {dark ? 'Modo Claro' : 'Modo Escuro'}
@@ -116,14 +118,15 @@ export default function Layout() {
               {user?.name?.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-gray-300 truncate">{user?.name}</p>
-              <p className="text-[10px] text-gray-600">{user?.role}</p>
+              <p className="text-xs font-medium truncate" style={{ color: 'var(--text-secondary)' }}>{user?.name}</p>
+              <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{user?.role}</p>
             </div>
           </div>
 
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-2 text-gray-600 hover:text-gray-300 hover:bg-white/5 text-xs px-3 py-2 rounded-lg transition-all"
+            className="w-full flex items-center gap-2 hover:bg-white/5 text-xs px-3 py-2 rounded-lg transition-all"
+            style={{ color: 'var(--text-muted)' }}
           >
             <LogOut size={13} />
             Sair da conta

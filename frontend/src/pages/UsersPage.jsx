@@ -53,9 +53,9 @@ export default function UsersPage() {
 
       <div className="table-wrapper">
         {users.length === 0 ? (
-          <div className="text-center py-16 text-gray-700">
+          <div className="text-center py-16" style={{ color: 'var(--text-muted)' }}>
             <Users size={36} className="mx-auto mb-3" />
-            <p className="text-sm text-gray-600">Nenhum usuário</p>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Nenhum usuário</p>
           </div>
         ) : (
           <table className="table">
@@ -76,10 +76,10 @@ export default function UsersPage() {
                       <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                         {u.name.charAt(0).toUpperCase()}
                       </div>
-                      <span className="font-medium text-gray-200">{u.name}</span>
+                      <span className="font-medium" style={{ color: 'var(--text-primary)' }}>{u.name}</span>
                     </div>
                   </td>
-                  <td className="text-gray-500">{u.email}</td>
+                  <td style={{ color: 'var(--text-muted)' }}>{u.email}</td>
                   <td><span className={ROLE_BADGE[u.role] || 'badge-draft'}>{ROLE_LABELS[u.role]}</span></td>
                   <td><span className={u.active ? 'badge-active' : 'badge-cancelled'}>{u.active ? 'Ativo' : 'Inativo'}</span></td>
                   <td>
@@ -99,7 +99,7 @@ export default function UsersPage() {
         <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
           <form onSubmit={handleSubmit(onSubmit)} className="modal max-w-md w-full">
             <div className="modal-header">
-              <h3 className="font-semibold text-gray-100">Novo Usuário</h3>
+              <h3 className="font-bold" style={{ color: 'var(--text-primary)' }}>Novo Usuário</h3>
               <button type="button" onClick={() => setShowModal(false)} className="btn-ghost p-1.5"><X size={16} /></button>
             </div>
             <div className="modal-body">
