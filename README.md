@@ -105,6 +105,23 @@ SMTP_PASS=sua_senha_app
 VITE_API_URL=http://localhost:3001/api
 ```
 
+## Changelog
+
+### 2026-06-05
+**Responsivo mobile completo**
+- `Layout.jsx`: sidebar fixa substituída por drawer deslizante no mobile — botão hamburguer + overlay de fechamento; desktop mantém comportamento original
+- `index.css`: `table-wrapper` com `overflow-x: auto` (tabelas roláveis no celular); `page-header` com `flex-wrap` para não esmagar título e botão
+- Todas as páginas: padding `p-4 sm:p-6` (adaptativo) em vez de `p-6` fixo
+- `Dashboard`: data oculta em telas pequenas, header com `flex-wrap`
+- `ContractsPage`: filtros empilham em coluna no mobile e abrem em linha no desktop
+
+### 2026-06-04 — Scaffold inicial
+**Sistema completo desenvolvido do zero**
+- Scaffold completo: autenticação JWT multi-tenant, controle de contratos, obras, ordens de compra, assinaturas, relatórios e dashboard
+- Visual ERP/SaaS premium com KPI cards coloridos, dark/light mode, máscara BRL
+- Esqueci senha com token seguro (1h), indicador de força de senha, e-mail HTML
+- Deploy: frontend Vercel + backend Railway
+
 ## Estrutura do Projeto
 ```
 sistema-controle-contratos/
