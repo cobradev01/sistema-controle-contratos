@@ -57,10 +57,10 @@ export default function Layout() {
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg flex-shrink-0">
               <Building2 size={16} className="text-white" />
             </div>
-            <div className="min-w-0">
-              <p className="text-sm font-bold truncate leading-tight text-white">{company?.name || 'Sistema'}</p>
+            <div className="flex-1 overflow-hidden">
+              <p className="text-sm font-bold text-white leading-tight break-words">{company?.name || 'Sistema'}</p>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block flex-shrink-0" />
                 <p className="text-[10px] uppercase tracking-wider font-medium text-gray-400">ERP · Contratos</p>
               </div>
             </div>
