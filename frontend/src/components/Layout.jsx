@@ -58,10 +58,10 @@ export default function Layout() {
               <Building2 size={16} className="text-white" />
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-bold truncate leading-tight" style={{ color: 'var(--text-primary)' }}>{company?.name || 'Sistema'}</p>
+              <p className="text-sm font-bold truncate leading-tight text-white">{company?.name || 'Sistema'}</p>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-                <p className="text-[10px] uppercase tracking-wider font-medium" style={{ color: 'var(--text-muted)' }}>ERP · Contratos</p>
+                <p className="text-[10px] uppercase tracking-wider font-medium text-gray-400">ERP · Contratos</p>
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@ export default function Layout() {
         <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-5">
           {navGroups.map((group) => (
             <div key={group.label}>
-              <p className="text-[10px] font-semibold uppercase tracking-widest px-3 mb-1.5" style={{ color: 'var(--text-muted)' }}>{group.label}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-widest px-3 mb-1.5 text-gray-600">{group.label}</p>
               <ul className="space-y-0.5">
                 {group.items.map(({ to, icon: Icon, label }) => (
                   <li key={to}>
@@ -85,11 +85,11 @@ export default function Layout() {
                             : 'hover:bg-white/5'
                         }`
                       }
-                      style={({ isActive }) => isActive ? {} : { color: 'var(--text-muted)' }}
+                      style={({ isActive }) => isActive ? {} : { color: '#9ca3af' }}
                     >
                       {({ isActive }) => (
                         <>
-                          <Icon size={14} className={isActive ? 'text-blue-500' : ''} style={!isActive ? { color: 'var(--text-muted)' } : {}} />
+                          <Icon size={14} className={isActive ? 'text-blue-500' : ''} style={!isActive ? { color: '#6b7280' } : {}} />
                           {label}
                         </>
                       )}
@@ -107,7 +107,7 @@ export default function Layout() {
           <button
             onClick={toggle}
             className="w-full flex items-center gap-2 hover:bg-white/5 text-xs px-3 py-2 rounded-lg transition-all mb-1"
-            style={{ color: 'var(--text-muted)' }}
+            style={{ color: '#9ca3af' }}
           >
             {dark ? <Sun size={13} /> : <Moon size={13} />}
             {dark ? 'Modo Claro' : 'Modo Escuro'}
@@ -118,15 +118,14 @@ export default function Layout() {
               {user?.name?.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium truncate" style={{ color: 'var(--text-secondary)' }}>{user?.name}</p>
-              <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{user?.role}</p>
+              <p className="text-xs font-medium truncate text-gray-300">{user?.name}</p>
+              <p className="text-[10px] text-gray-500">{user?.role}</p>
             </div>
           </div>
 
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-2 hover:bg-white/5 text-xs px-3 py-2 rounded-lg transition-all"
-            style={{ color: 'var(--text-muted)' }}
+            className="w-full flex items-center gap-2 hover:bg-white/5 text-xs px-3 py-2 rounded-lg transition-all text-gray-500 hover:text-gray-300"
           >
             <LogOut size={13} />
             Sair da conta
