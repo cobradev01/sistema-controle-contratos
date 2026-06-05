@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
 import { ArrowLeft, CheckCircle, Circle, Clock, Plus, Camera, ShoppingCart } from 'lucide-react';
+import CurrencyInput from '../components/CurrencyInput';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -215,7 +216,11 @@ export default function ObraDetailPage() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="label">Valor (R$) *</label>
-                <input className="input" type="number" step="0.01" value={custo.value} onChange={e => setCusto({ ...custo, value: e.target.value })} required />
+                <CurrencyInput
+                  value={custo.value}
+                  onChange={v => setCusto({ ...custo, value: v })}
+                  required
+                />
               </div>
               <div>
                 <label className="label">Data *</label>
@@ -296,7 +301,7 @@ export default function ObraDetailPage() {
                 <div key={i} className="grid grid-cols-3 gap-2 mb-2">
                   <input className="input col-span-1" placeholder="Descrição" value={item.description} onChange={e => { const n = [...poForm.items]; n[i].description = e.target.value; setPoForm({ ...poForm, items: n }); }} />
                   <input className="input" type="number" placeholder="Qtd" value={item.quantity} onChange={e => { const n = [...poForm.items]; n[i].quantity = Number(e.target.value); setPoForm({ ...poForm, items: n }); }} />
-                  <input className="input" type="number" step="0.01" placeholder="Preço Unit." value={item.unitPrice} onChange={e => { const n = [...poForm.items]; n[i].unitPrice = Number(e.target.value); setPoForm({ ...poForm, items: n }); }} />
+                  <CurrencyInput placeholder="R$ 0,00" value={item.unitPrice} onChange={v => { const n = [...poForm.items]; n[i].unitPrice = v; setPoForm({ ...poForm, items: n }); }} />
                 </div>
               ))}
               <button type="button" onClick={() => setPoForm({ ...poForm, items: [...poForm.items, { description: '', quantity: 1, unitPrice: 0 }] })} className="text-blue-600 text-sm hover:underline">+ Item</button>

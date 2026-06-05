@@ -19,7 +19,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0b0d13] flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'var(--bg-app)' }}>
       {/* Background glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-3xl" />
@@ -31,8 +31,8 @@ export default function LoginPage() {
           <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-600 rounded-xl mb-4 shadow-lg shadow-blue-900/50">
             <Building2 size={22} className="text-white" />
           </div>
-          <h1 className="text-xl font-semibold text-gray-100">Sistema GLC</h1>
-          <p className="text-sm text-gray-600 mt-1">Contratos & Gestão de Obras</p>
+          <h1 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>Sistema GLC</h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>Contratos & Gestão de Obras</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}
@@ -90,12 +90,12 @@ export default function LoginPage() {
           </p>
         </form>
 
-        <div className="mt-4 p-3 bg-white/[0.02] border border-white/[0.05] rounded-lg">
-          <p className="text-[10px] text-gray-700 uppercase tracking-wider mb-1.5 font-medium">Acesso demo</p>
-          <div className="space-y-0.5 text-xs text-gray-600 font-mono">
-            <p>CNPJ: <span className="text-gray-400">41936629000125</span></p>
-            <p>Email: <span className="text-gray-400">gabrielcobradev@gmail.com</span></p>
-            <p>Senha: <span className="text-gray-400">admin123</span></p>
+        <div className="mt-4 p-3 rounded-lg border" style={{ background: 'var(--bg-elevated)', borderColor: 'var(--border)' }}>
+          <p className="text-[10px] uppercase tracking-wider mb-1.5 font-medium" style={{ color: 'var(--text-muted)' }}>Acesso demo</p>
+          <div className="space-y-0.5 text-xs font-mono" style={{ color: 'var(--text-secondary)' }}>
+            <p>CNPJ: <span className="text-blue-500">41936629000125</span></p>
+            <p>Email: <span className="text-blue-500">gabrielcobradev@gmail.com</span></p>
+            <p>Senha: <span className="text-blue-500">admin123</span></p>
           </div>
         </div>
       </div>

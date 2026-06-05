@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
 import { ArrowLeft, BookOpen, FilePlus, AlertCircle, CheckCircle } from 'lucide-react';
+import CurrencyInput from '../components/CurrencyInput';
 
 const CONTRACT_TYPES = [
   { value: 'SERVICE', label: 'Prestação de Serviço' },
@@ -27,7 +28,7 @@ export default function NewContractPage() {
   const [fieldValues, setFieldValues] = useState({});
   const [previewContent, setPreviewContent] = useState('');
 
-  const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm({
+  const { register, handleSubmit, watch, setValue, control, formState: { errors, isSubmitting } } = useForm({
     defaultValues: { type: 'SERVICE' }
   });
 
@@ -153,8 +154,14 @@ export default function NewContractPage() {
 
               <div>
                 <label className="label">Valor (R$)</label>
-                <input className="input" type="number" step="0.01" min="0" placeholder="0,00"
-                  {...register('value', { min: { value: 0, message: 'Valor não pode ser negativo' } })} />
+                <Controller
+                  name="value"
+                  control={control}
+                  rules={{ min: { value: 0, message: 'Valor não pode ser negativo' } }}
+                  render={({ field }) => (
+                    <CurrencyInput {...field} error={errors.value} />
+                  )}
+                />
                 <FieldError message={errors.value?.message} />
               </div>
 

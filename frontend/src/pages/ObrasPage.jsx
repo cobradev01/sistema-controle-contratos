@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
 import { Plus, HardHat, AlertCircle, X } from 'lucide-react';
+import CurrencyInput from '../components/CurrencyInput';
+import { Controller } from 'react-hook-form';
 
 const STATUS_LABELS = { PLANNING: 'Planejamento', IN_PROGRESS: 'Em Andamento', PAUSED: 'Pausada', COMPLETED: 'Concluída', CANCELLED: 'Cancelada' };
 const STATUS_BADGE  = { PLANNING: 'badge-draft', IN_PROGRESS: 'badge-active', PAUSED: 'badge-pending', COMPLETED: 'badge-signed', CANCELLED: 'badge-cancelled' };
@@ -19,7 +21,7 @@ export default function ObrasPage() {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm();
+  const { register, handleSubmit, reset, control, formState: { errors, isSubmitting } } = useForm();
 
   useEffect(() => {
     api.get('/obras').then(r => setObras(r.data.obras));
@@ -28,7 +30,7 @@ export default function ObrasPage() {
 
   async function onSubmit(data) {
     try {
-      const res = await api.post('/obras', { ...data, budget: parseFloat(data.budget) });
+      const res = await api.post('/obras', { ...data, budget: parseFloat(data.budget || 0) });
       toast.success('Obra criada!');
       setShowModal(false);
       reset();
@@ -118,9 +120,14 @@ export default function ObrasPage() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="label">Orçamento (R$) *</label>
-                  <input className={`input ${errors.budget ? 'input-error' : ''}`}
-                    type="number" step="0.01" min="1" placeholder="0,00"
-                    {...register('budget', { required: 'Orçamento obrigatório', min: { value: 1, message: 'Deve ser maior que zero' } })} />
+                  <Controller
+                    name="budget"
+                    control={control}
+                    rules={{ required: 'Orçamento obrigatório', min: { value: 0.01, message: 'Deve ser maior que zero' } }}
+                    render={({ field }) => (
+                      <CurrencyInput {...field} error={errors.budget} />
+                    )}
+                  />
                   <FieldError message={errors.budget?.message} />
                 </div>
                 <div>
