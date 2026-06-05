@@ -71,7 +71,7 @@ export default function ObraDetailPage() {
   const phases = ['PLANNING', 'EXECUTION', 'DELIVERY'];
 
   return (
-    <div className="p-8 max-w-6xl mx-auto space-y-6">
+    <div className="p-4 sm:p-8 max-w-6xl mx-auto space-y-6">
       <div className="flex items-center gap-4">
         <button onClick={() => navigate('/obras')} className="btn-ghost p-2" style={{ color: 'var(--text-muted)' }}><ArrowLeft size={20} /></button>
         <div className="flex-1">
@@ -80,7 +80,7 @@ export default function ObraDetailPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
           { label: 'Orçamento', value: fmt(obra.budget) },
           { label: 'Gasto Real', value: fmt(obra.totalCost) },
@@ -100,10 +100,10 @@ export default function ObraDetailPage() {
           style={{ width: `${Math.min(budgetPct, 100)}%` }} />
       </div>
 
-      <div className="flex gap-1 border-b" style={{ borderColor: 'var(--border)' }}>
+      <div className="flex gap-1 border-b overflow-x-auto" style={{ borderColor: 'var(--border)' }}>
         {tabs.map(t => (
           <button key={t.id} onClick={() => setActiveTab(t.id)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === t.id ? 'border-blue-500 text-blue-500' : 'border-transparent hover:text-gray-600'}`}
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === t.id ? 'border-blue-500 text-blue-500' : 'border-transparent hover:text-gray-600'}`}
             style={activeTab !== t.id ? { color: 'var(--text-muted)' } : {}}>
             {t.label}
           </button>
@@ -137,7 +137,7 @@ export default function ObraDetailPage() {
           <div className="flex justify-end mb-4">
             <button onClick={() => setShowCustoModal(true)} className="btn-primary flex items-center gap-2"><Plus size={15} /> Lançar Custo</button>
           </div>
-          <table className="table w-full text-sm">
+          <div className="overflow-x-auto"><table className="table w-full text-sm">
             <thead>
               <tr>
                 <th>Descrição</th>
@@ -166,7 +166,7 @@ export default function ObraDetailPage() {
                 </tr>
               </tfoot>
             )}
-          </table>
+          </table></div>
           {obra.custos?.length === 0 && <div className="text-center py-8" style={{ color: 'var(--text-muted)' }}>Nenhum custo registrado</div>}
         </div>
       )}
