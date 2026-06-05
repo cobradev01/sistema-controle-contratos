@@ -91,10 +91,10 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-4 p-3 rounded-lg border" style={{ background: 'var(--bg-elevated)', borderColor: 'var(--border)' }}>
-          <p className="text-[10px] uppercase tracking-wider mb-1.5 font-medium" style={{ color: 'var(--text-muted)' }}>Acesso demo</p>
+          <p className="text-[10px] uppercase tracking-wider mb-1.5 font-medium" style={{ color: 'var(--text-muted)' }}>Acesso de demonstração — B2B Soluções em Negócios</p>
           <div className="space-y-0.5 text-xs font-mono" style={{ color: 'var(--text-secondary)' }}>
-            <p>CNPJ: <span className="text-blue-500">41936629000125</span></p>
-            <p>Email: <span className="text-blue-500">gabrielcobradev@gmail.com</span></p>
+            <p>CNPJ: <span className="text-blue-500">48.011.700/0001-08</span></p>
+            <p>Email: <span className="text-blue-500">rh@associacaodebeneficios.com.br</span></p>
             <p>Senha: <span className="text-blue-500">admin123</span></p>
           </div>
         </div>
