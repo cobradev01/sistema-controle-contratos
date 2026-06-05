@@ -3,14 +3,19 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Roboto', 'system-ui', 'sans-serif'],
+        mono: ['Roboto Mono', 'monospace'],
+      },
       colors: {
-        primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          900: '#1e3a8a',
+        surface: {
+          DEFAULT: '#16181f',
+          elevated: '#1e2130',
+          overlay: '#242736',
+        },
+        brand: {
+          DEFAULT: '#3b82f6',
+          hover: '#60a5fa',
         },
       },
     },

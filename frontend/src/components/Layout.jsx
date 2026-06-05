@@ -1,29 +1,35 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import {
-  LayoutDashboard, FileText, BookTemplate, PenSquare, ClipboardCheck,
-  Briefcase, HardHat, ShoppingCart, BarChart3, Users, LogOut, Building2, ChevronRight
+  LayoutDashboard, FileText, BookOpen, FilePlus, PenSquare,
+  ClipboardCheck, Briefcase, HardHat, ShoppingCart, BarChart3,
+  Users, LogOut, Building2, ChevronRight, Settings
 } from 'lucide-react';
 
 const navGroups = [
   {
-    label: 'Contratos & Assinaturas',
+    label: 'Contratos',
     items: [
-      { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-      { to: '/contratos', icon: FileText, label: 'Contratos' },
-      { to: '/templates', icon: BookTemplate, label: 'Templates' },
-      { to: '/contratos/novo', icon: PenSquare, label: 'Novo Contrato' },
-      { to: '/assinaturas', icon: ClipboardCheck, label: 'Assinaturas' },
-      { to: '/gerenciador', icon: Briefcase, label: 'Gerenciador' },
+      { to: '/dashboard',    icon: LayoutDashboard, label: 'Dashboard' },
+      { to: '/contratos',    icon: FileText,         label: 'Contratos',   exact: true },
+      { to: '/templates',    icon: BookOpen,         label: 'Templates' },
+      { to: '/contratos/novo', icon: FilePlus,       label: 'Novo Contrato' },
+      { to: '/assinaturas',  icon: PenSquare,        label: 'Assinaturas' },
+      { to: '/gerenciador',  icon: Briefcase,        label: 'Gerenciador' },
     ],
   },
   {
-    label: 'Obras & Configurações',
+    label: 'Obras',
     items: [
-      { to: '/obras', icon: HardHat, label: 'Obras' },
-      { to: '/ordens-compra', icon: ShoppingCart, label: 'Ordens de Compra' },
+      { to: '/obras',          icon: HardHat,      label: 'Obras' },
+      { to: '/ordens-compra',  icon: ShoppingCart, label: 'Ordens de Compra' },
+    ],
+  },
+  {
+    label: 'Sistema',
+    items: [
       { to: '/relatorios', icon: BarChart3, label: 'Relatórios' },
-      { to: '/usuarios', icon: Users, label: 'Gestão de Usuários' },
+      { to: '/usuarios',   icon: Users,    label: 'Usuários' },
     ],
   },
 ];
@@ -38,39 +44,48 @@ export default function Layout() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-[#0f1117] overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 bg-slate-900 flex flex-col flex-shrink-0">
-        <div className="p-5 border-b border-slate-700">
-          <div className="flex items-center gap-2">
-            <Building2 className="text-blue-400" size={22} />
-            <div>
-              <p className="text-white font-semibold text-sm leading-tight truncate">{company?.name || 'Sistema'}</p>
-              <p className="text-slate-400 text-xs">Contratos & Obras</p>
+      <aside className="w-60 flex flex-col flex-shrink-0 border-r border-white/[0.05] bg-[#0b0d13]">
+
+        {/* Logo */}
+        <div className="px-4 py-5 border-b border-white/[0.05]">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-900/50 flex-shrink-0">
+              <Building2 size={15} className="text-white" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-gray-100 truncate leading-tight">{company?.name || 'Sistema'}</p>
+              <p className="text-[10px] text-gray-600 uppercase tracking-wider">ERP Contratos</p>
             </div>
           </div>
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-5">
           {navGroups.map((group) => (
             <div key={group.label}>
-              <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider px-2 mb-2">{group.label}</p>
+              <p className="text-[10px] font-semibold text-gray-700 uppercase tracking-widest px-3 mb-1">{group.label}</p>
               <ul className="space-y-0.5">
                 {group.items.map(({ to, icon: Icon, label }) => (
                   <li key={to}>
                     <NavLink
                       to={to}
-                      end={to === '/contratos/novo' ? false : true}
+                      end={to !== '/contratos/novo'}
                       className={({ isActive }) =>
-                        `flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+                        `flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-150 group ${
                           isActive
-                            ? 'bg-blue-600 text-white'
-                            : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                            ? 'bg-blue-600/15 text-blue-400 border border-blue-500/20'
+                            : 'text-gray-500 hover:bg-white/[0.04] hover:text-gray-300'
                         }`
                       }
                     >
-                      <Icon size={16} />
-                      {label}
+                      {({ isActive }) => (
+                        <>
+                          <Icon size={14} className={isActive ? 'text-blue-400' : 'text-gray-600 group-hover:text-gray-400'} />
+                          {label}
+                        </>
+                      )}
                     </NavLink>
                   </li>
                 ))}
@@ -79,24 +94,28 @@ export default function Layout() {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-slate-700">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold">
+        {/* User footer */}
+        <div className="p-3 border-t border-white/[0.05]">
+          <div className="flex items-center gap-2.5 px-2 py-2 rounded-lg mb-1">
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
               {user?.name?.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-medium truncate">{user?.name}</p>
-              <p className="text-slate-400 text-xs">{user?.role}</p>
+              <p className="text-xs font-medium text-gray-200 truncate">{user?.name}</p>
+              <p className="text-[10px] text-gray-600">{user?.role}</p>
             </div>
           </div>
-          <button onClick={handleLogout} className="w-full flex items-center gap-2 text-slate-400 hover:text-white text-sm px-2 py-1.5 rounded hover:bg-slate-800 transition-colors">
-            <LogOut size={15} />
-            Sair
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-2 text-gray-600 hover:text-gray-300 hover:bg-white/[0.04] text-xs px-3 py-2 rounded-lg transition-all"
+          >
+            <LogOut size={13} />
+            Sair da conta
           </button>
         </div>
       </aside>
 
-      {/* Main */}
+      {/* Main content */}
       <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>

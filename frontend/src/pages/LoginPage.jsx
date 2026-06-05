@@ -1,17 +1,16 @@
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
-import { Building2 } from 'lucide-react';
+import { Building2, AlertCircle, LogIn } from 'lucide-react';
 
 export default function LoginPage() {
-  const [form, setForm] = useState({ cnpj: '', email: '', password: '' });
-  const { login, loading } = useAuthStore();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+  const { login } = useAuthStore();
   const navigate = useNavigate();
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const result = await login(form.cnpj, form.email, form.password);
+  async function onSubmit(data) {
+    const result = await login(data.cnpj, data.email, data.password);
     if (result.success) {
       navigate('/dashboard');
     } else {
@@ -20,48 +19,85 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-[#0b0d13] flex items-center justify-center p-4">
+      {/* Background glow */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-3xl" />
+      </div>
+
+      <div className="w-full max-w-sm relative">
+        {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-blue-600 rounded-2xl mb-4">
-            <Building2 className="text-white" size={28} />
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-600 rounded-xl mb-4 shadow-lg shadow-blue-900/50">
+            <Building2 size={22} className="text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-white">Sistema de Contratos</h1>
-          <p className="text-slate-400 mt-1">Gestão Orçamentária & Obras</p>
+          <h1 className="text-xl font-semibold text-gray-100">Sistema GLC</h1>
+          <p className="text-sm text-gray-600 mt-1">Contratos & Gestão de Obras</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-8 shadow-xl space-y-4">
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Entrar na plataforma</h2>
+        <form onSubmit={handleSubmit(onSubmit)}
+          className="card border-white/[0.08] space-y-4 p-6">
 
           <div>
             <label className="label">CNPJ da Empresa</label>
-            <input className="input" placeholder="00.000.000/0001-00" value={form.cnpj}
-              onChange={e => setForm({ ...form, cnpj: e.target.value })} required />
-          </div>
-          <div>
-            <label className="label">E-mail</label>
-            <input className="input" type="email" placeholder="seu@email.com" value={form.email}
-              onChange={e => setForm({ ...form, email: e.target.value })} required />
-          </div>
-          <div>
-            <label className="label">Senha</label>
-            <input className="input" type="password" placeholder="••••••••" value={form.password}
-              onChange={e => setForm({ ...form, password: e.target.value })} required />
+            <input
+              className={`input ${errors.cnpj ? 'input-error' : ''}`}
+              placeholder="00.000.000/0001-00"
+              {...register('cnpj', {
+                required: 'CNPJ obrigatório',
+                minLength: { value: 14, message: 'CNPJ deve ter pelo menos 14 caracteres' },
+              })}
+            />
+            {errors.cnpj && <p className="field-error"><AlertCircle size={12} />{errors.cnpj.message}</p>}
           </div>
 
-          <button type="submit" className="btn-primary w-full" disabled={loading}>
-            {loading ? 'Entrando...' : 'Entrar'}
+          <div>
+            <label className="label">E-mail</label>
+            <input
+              className={`input ${errors.email ? 'input-error' : ''}`}
+              type="email"
+              placeholder="seu@email.com"
+              {...register('email', {
+                required: 'E-mail obrigatório',
+                pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'E-mail inválido' },
+              })}
+            />
+            {errors.email && <p className="field-error"><AlertCircle size={12} />{errors.email.message}</p>}
+          </div>
+
+          <div>
+            <label className="label">Senha</label>
+            <input
+              className={`input ${errors.password ? 'input-error' : ''}`}
+              type="password"
+              placeholder="••••••••"
+              {...register('password', {
+                required: 'Senha obrigatória',
+                minLength: { value: 6, message: 'Senha deve ter pelo menos 6 caracteres' },
+              })}
+            />
+            {errors.password && <p className="field-error"><AlertCircle size={12} />{errors.password.message}</p>}
+          </div>
+
+          <button type="submit" className="btn-primary w-full py-2.5" disabled={isSubmitting}>
+            <LogIn size={15} />
+            {isSubmitting ? 'Entrando...' : 'Entrar'}
           </button>
 
           <p className="text-center text-sm text-gray-600">
             Não tem conta?{' '}
-            <Link to="/register" className="text-blue-600 hover:underline font-medium">Cadastre sua empresa</Link>
+            <Link to="/register" className="text-blue-500 hover:text-blue-400 font-medium">Cadastrar empresa</Link>
           </p>
         </form>
 
-        <p className="text-center text-slate-500 text-xs mt-4">
-          Demo: CNPJ 00.000.000/0001-00 | admin@glctecnologia.com.br | admin123
-        </p>
+        <div className="mt-4 p-3 bg-white/[0.02] border border-white/[0.05] rounded-lg">
+          <p className="text-[10px] text-gray-700 uppercase tracking-wider mb-1.5 font-medium">Acesso demo</p>
+          <div className="space-y-0.5 text-xs text-gray-600 font-mono">
+            <p>CNPJ: <span className="text-gray-400">41936629000125</span></p>
+            <p>Email: <span className="text-gray-400">gabrielcobradev@gmail.com</span></p>
+            <p>Senha: <span className="text-gray-400">admin123</span></p>
+          </div>
+        </div>
       </div>
     </div>
   );

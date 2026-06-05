@@ -1,16 +1,26 @@
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
+import { Building2, AlertCircle } from 'lucide-react';
+
+function Field({ label, error, children }) {
+  return (
+    <div>
+      <label className="label">{label}</label>
+      {children}
+      {error && <p className="field-error"><AlertCircle size={12} />{error}</p>}
+    </div>
+  );
+}
 
 export default function RegisterPage() {
-  const [form, setForm] = useState({ companyName: '', companyCnpj: '', companyEmail: '', name: '', email: '', password: '' });
-  const { register, loading } = useAuthStore();
+  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm();
+  const { register: registerUser } = useAuthStore();
   const navigate = useNavigate();
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const result = await register(form);
+  async function onSubmit(data) {
+    const result = await registerUser(data);
     if (result.success) {
       toast.success('Empresa cadastrada com sucesso!');
       navigate('/dashboard');
@@ -19,36 +29,84 @@ export default function RegisterPage() {
     }
   }
 
-  const field = (key, label, type = 'text', placeholder = '') => (
-    <div>
-      <label className="label">{label}</label>
-      <input className="input" type={type} placeholder={placeholder} value={form[key]}
-        onChange={e => setForm({ ...form, [key]: e.target.value })} required />
-    </div>
-  );
-
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#0b0d13] flex items-center justify-center p-4">
       <div className="w-full max-w-lg">
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-8 shadow-xl space-y-4">
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Cadastrar Empresa</h2>
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center justify-center w-10 h-10 bg-blue-600 rounded-xl mb-3">
+            <Building2 size={18} className="text-white" />
+          </div>
+          <h1 className="text-lg font-semibold text-gray-100">Cadastrar Empresa</h1>
+          <p className="text-sm text-gray-600 mt-1">Crie sua conta no sistema GLC</p>
+        </div>
 
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Dados da Empresa</p>
-          {field('companyName', 'Razão Social', 'text', 'Nome da empresa')}
-          {field('companyCnpj', 'CNPJ', 'text', '00.000.000/0001-00')}
-          {field('companyEmail', 'E-mail da Empresa', 'email', 'empresa@exemplo.com')}
+        <form onSubmit={handleSubmit(onSubmit)} className="card border-white/[0.08] p-6 space-y-5">
 
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide pt-2">Administrador</p>
-          {field('name', 'Nome Completo', 'text', 'Seu nome')}
-          {field('email', 'E-mail', 'email', 'admin@exemplo.com')}
-          {field('password', 'Senha', 'password', '••••••••')}
+          {/* Empresa */}
+          <div>
+            <p className="section-label">Dados da Empresa</p>
+            <div className="space-y-3">
+              <Field label="Razão Social *" error={errors.companyName?.message}>
+                <input className={`input ${errors.companyName ? 'input-error' : ''}`}
+                  placeholder="Nome da empresa"
+                  {...register('companyName', { required: 'Razão social obrigatória', minLength: { value: 3, message: 'Mínimo 3 caracteres' } })} />
+              </Field>
+              <Field label="CNPJ *" error={errors.companyCnpj?.message}>
+                <input className={`input ${errors.companyCnpj ? 'input-error' : ''}`}
+                  placeholder="00.000.000/0001-00"
+                  {...register('companyCnpj', {
+                    required: 'CNPJ obrigatório',
+                    minLength: { value: 14, message: 'CNPJ inválido' },
+                  })} />
+              </Field>
+              <Field label="E-mail da Empresa *" error={errors.companyEmail?.message}>
+                <input className={`input ${errors.companyEmail ? 'input-error' : ''}`}
+                  type="email" placeholder="empresa@exemplo.com"
+                  {...register('companyEmail', {
+                    required: 'E-mail da empresa obrigatório',
+                    pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'E-mail inválido' },
+                  })} />
+              </Field>
+            </div>
+          </div>
 
-          <button type="submit" className="btn-primary w-full" disabled={loading}>
-            {loading ? 'Cadastrando...' : 'Criar conta'}
+          <div className="divider" />
+
+          {/* Admin */}
+          <div>
+            <p className="section-label">Administrador</p>
+            <div className="space-y-3">
+              <Field label="Nome Completo *" error={errors.name?.message}>
+                <input className={`input ${errors.name ? 'input-error' : ''}`}
+                  placeholder="Seu nome completo"
+                  {...register('name', { required: 'Nome obrigatório', minLength: { value: 3, message: 'Mínimo 3 caracteres' } })} />
+              </Field>
+              <Field label="E-mail *" error={errors.email?.message}>
+                <input className={`input ${errors.email ? 'input-error' : ''}`}
+                  type="email" placeholder="admin@exemplo.com"
+                  {...register('email', {
+                    required: 'E-mail obrigatório',
+                    pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'E-mail inválido' },
+                  })} />
+              </Field>
+              <Field label="Senha *" error={errors.password?.message}>
+                <input className={`input ${errors.password ? 'input-error' : ''}`}
+                  type="password" placeholder="Mínimo 8 caracteres"
+                  {...register('password', {
+                    required: 'Senha obrigatória',
+                    minLength: { value: 8, message: 'Mínimo 8 caracteres' },
+                  })} />
+              </Field>
+            </div>
+          </div>
+
+          <button type="submit" className="btn-primary w-full py-2.5" disabled={isSubmitting}>
+            {isSubmitting ? 'Criando conta...' : 'Criar conta'}
           </button>
 
           <p className="text-center text-sm text-gray-600">
-            Já tem conta? <Link to="/login" className="text-blue-600 hover:underline font-medium">Entrar</Link>
+            Já tem conta?{' '}
+            <Link to="/login" className="text-blue-500 hover:text-blue-400 font-medium">Entrar</Link>
           </p>
         </form>
       </div>

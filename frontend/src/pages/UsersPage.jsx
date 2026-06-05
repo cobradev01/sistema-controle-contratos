@@ -1,24 +1,32 @@
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
-import { Plus, Users } from 'lucide-react';
+import { Plus, Users, AlertCircle, X } from 'lucide-react';
 
 const ROLE_LABELS = { ADMIN: 'Administrador', MANAGER: 'Gerente', USER: 'Usuário' };
+const ROLE_BADGE  = { ADMIN: 'badge-info', MANAGER: 'badge-signed', USER: 'badge-draft' };
+
+function FieldError({ message }) {
+  if (!message) return null;
+  return <p className="field-error"><AlertCircle size={11} />{message}</p>;
+}
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'USER' });
+
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({ defaultValues: { role: 'USER' } });
 
   const load = () => api.get('/users').then(r => setUsers(r.data));
   useEffect(() => { load(); }, []);
 
-  async function createUser(e) {
-    e.preventDefault();
+  async function onSubmit(data) {
     try {
-      await api.post('/users', form);
+      await api.post('/users', data);
       toast.success('Usuário criado!');
       setShowModal(false);
+      reset();
       load();
     } catch (err) {
       toast.error(err.response?.data?.error || 'Erro ao criar usuário');
@@ -28,77 +36,105 @@ export default function UsersPage() {
   async function toggleActive(user) {
     await api.put(`/users/${user.id}`, { active: !user.active });
     load();
+    toast.success(user.active ? 'Usuário desativado' : 'Usuário ativado');
   }
 
   return (
-    <div className="p-8 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-6 space-y-5">
+      <div className="page-header">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gestão de Usuários</h1>
-          <p className="text-gray-500 text-sm">Multi-tenant — usuários desta empresa</p>
+          <h1 className="page-title">Gestão de Usuários</h1>
+          <p className="page-subtitle">Multi-tenant — acesso isolado por empresa</p>
         </div>
-        <button onClick={() => setShowModal(true)} className="btn-primary flex items-center gap-2">
-          <Plus size={16} /> Novo Usuário
+        <button onClick={() => setShowModal(true)} className="btn-primary">
+          <Plus size={15} /> Novo Usuário
         </button>
       </div>
 
-      <div className="card">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b text-xs text-gray-500 uppercase tracking-wide">
-              <th className="pb-3 text-left font-medium">Nome</th>
-              <th className="pb-3 text-left font-medium">E-mail</th>
-              <th className="pb-3 text-left font-medium">Perfil</th>
-              <th className="pb-3 text-left font-medium">Status</th>
-              <th className="pb-3 font-medium">Ações</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y">
-            {users.map(u => (
-              <tr key={u.id} className="hover:bg-gray-50">
-                <td className="py-3 font-medium">{u.name}</td>
-                <td className="py-3 text-gray-600">{u.email}</td>
-                <td className="py-3"><span className="badge-draft">{ROLE_LABELS[u.role]}</span></td>
-                <td className="py-3"><span className={u.active ? 'badge-active' : 'badge-cancelled'}>{u.active ? 'Ativo' : 'Inativo'}</span></td>
-                <td className="py-3 text-center">
-                  <button onClick={() => toggleActive(u)} className="text-xs text-blue-600 hover:underline">
-                    {u.active ? 'Desativar' : 'Ativar'}
-                  </button>
-                </td>
+      <div className="table-wrapper">
+        {users.length === 0 ? (
+          <div className="text-center py-16 text-gray-700">
+            <Users size={36} className="mx-auto mb-3" />
+            <p className="text-sm text-gray-600">Nenhum usuário</p>
+          </div>
+        ) : (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Perfil</th>
+                <th>Status</th>
+                <th>Ações</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {users.length === 0 && <div className="text-center py-8 text-gray-500">Nenhum usuário encontrado</div>}
+            </thead>
+            <tbody>
+              {users.map(u => (
+                <tr key={u.id}>
+                  <td>
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                        {u.name.charAt(0).toUpperCase()}
+                      </div>
+                      <span className="font-medium text-gray-200">{u.name}</span>
+                    </div>
+                  </td>
+                  <td className="text-gray-500">{u.email}</td>
+                  <td><span className={ROLE_BADGE[u.role] || 'badge-draft'}>{ROLE_LABELS[u.role]}</span></td>
+                  <td><span className={u.active ? 'badge-active' : 'badge-cancelled'}>{u.active ? 'Ativo' : 'Inativo'}</span></td>
+                  <td>
+                    <button onClick={() => toggleActive(u)}
+                      className={`text-xs font-medium transition-colors ${u.active ? 'text-red-500 hover:text-red-400' : 'text-emerald-500 hover:text-emerald-400'}`}>
+                      {u.active ? 'Desativar' : 'Ativar'}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <form onSubmit={createUser} className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl space-y-4">
-            <h3 className="font-bold text-lg">Novo Usuário</h3>
-            <div>
-              <label className="label">Nome *</label>
-              <input className="input" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
+        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
+          <form onSubmit={handleSubmit(onSubmit)} className="modal max-w-md w-full">
+            <div className="modal-header">
+              <h3 className="font-semibold text-gray-100">Novo Usuário</h3>
+              <button type="button" onClick={() => setShowModal(false)} className="btn-ghost p-1.5"><X size={16} /></button>
             </div>
-            <div>
-              <label className="label">E-mail *</label>
-              <input className="input" type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required />
+            <div className="modal-body">
+              <div>
+                <label className="label">Nome Completo *</label>
+                <input className={`input ${errors.name ? 'input-error' : ''}`}
+                  {...register('name', { required: 'Nome obrigatório', minLength: { value: 3, message: 'Mínimo 3 caracteres' } })} />
+                <FieldError message={errors.name?.message} />
+              </div>
+              <div>
+                <label className="label">E-mail *</label>
+                <input className={`input ${errors.email ? 'input-error' : ''}`} type="email"
+                  {...register('email', { required: 'E-mail obrigatório', pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'E-mail inválido' } })} />
+                <FieldError message={errors.email?.message} />
+              </div>
+              <div>
+                <label className="label">Senha *</label>
+                <input className={`input ${errors.password ? 'input-error' : ''}`} type="password"
+                  {...register('password', { required: 'Senha obrigatória', minLength: { value: 8, message: 'Mínimo 8 caracteres' } })} />
+                <FieldError message={errors.password?.message} />
+              </div>
+              <div>
+                <label className="label">Perfil de Acesso</label>
+                <select className="input" {...register('role')}>
+                  <option value="USER">Usuário</option>
+                  <option value="MANAGER">Gerente</option>
+                  <option value="ADMIN">Administrador</option>
+                </select>
+              </div>
             </div>
-            <div>
-              <label className="label">Senha *</label>
-              <input className="input" type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} required />
-            </div>
-            <div>
-              <label className="label">Perfil</label>
-              <select className="input" value={form.role} onChange={e => setForm({ ...form, role: e.target.value })}>
-                <option value="USER">Usuário</option>
-                <option value="MANAGER">Gerente</option>
-                <option value="ADMIN">Administrador</option>
-              </select>
-            </div>
-            <div className="flex gap-3">
-              <button type="button" onClick={() => setShowModal(false)} className="btn-secondary flex-1">Cancelar</button>
-              <button type="submit" className="btn-primary flex-1">Criar</button>
+            <div className="modal-footer">
+              <button type="button" onClick={() => setShowModal(false)} className="btn-secondary">Cancelar</button>
+              <button type="submit" className="btn-primary" disabled={isSubmitting}>
+                {isSubmitting ? 'Criando...' : 'Criar Usuário'}
+              </button>
             </div>
           </form>
         </div>

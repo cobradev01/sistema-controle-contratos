@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../lib/api';
-import { Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Clock, CheckCircle, XCircle, PenSquare } from 'lucide-react';
+
+const SIGN_STATUS = { PENDING: { icon: Clock, color: 'text-gray-500', badge: 'badge-draft' }, SENT: { icon: Clock, color: 'text-amber-400', badge: 'badge-pending' }, VIEWED: { icon: Clock, color: 'text-blue-400', badge: 'badge-signed' }, SIGNED: { icon: CheckCircle, color: 'text-emerald-400', badge: 'badge-active' }, EXPIRED: { icon: XCircle, color: 'text-red-400', badge: 'badge-expired' } };
 
 export default function SignaturesPage() {
   const [contracts, setContracts] = useState([]);
@@ -9,44 +11,50 @@ export default function SignaturesPage() {
   useEffect(() => { api.get('/signatures/pending').then(r => setContracts(r.data)); }, []);
 
   return (
-    <div className="p-8 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Fila de Assinaturas</h1>
-        <p className="text-gray-500 text-sm">{contracts.length} contratos aguardando assinatura</p>
+    <div className="p-6 space-y-5">
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Fila de Assinaturas</h1>
+          <p className="page-subtitle">{contracts.length} contrato{contracts.length !== 1 ? 's' : ''} aguardando assinatura</p>
+        </div>
       </div>
 
-      <div className="space-y-4">
-        {contracts.map(c => (
-          <div key={c.id} className="card">
-            <div className="flex items-start justify-between">
-              <div>
-                <Link to={`/contratos/${c.id}`} className="font-semibold text-blue-600 hover:underline">{c.title}</Link>
-                <p className="text-sm text-gray-500">{c.relatedParty}</p>
-              </div>
-              <span className="badge-pending">Aguardando Assinatura</span>
-            </div>
-            <div className="mt-3 space-y-1">
-              {c.signatureRequests?.map(r => (
-                <div key={r.id} className="flex items-center gap-2 text-sm">
-                  {r.status === 'SIGNED' ? <CheckCircle size={14} className="text-green-500" /> :
-                    r.status === 'EXPIRED' ? <XCircle size={14} className="text-red-500" /> :
-                    <Clock size={14} className="text-yellow-500" />}
-                  <span className="text-gray-700">{r.signerName}</span>
-                  <span className="text-gray-400">{r.signerEmail}</span>
-                  <span className={`text-xs font-medium ${r.status === 'SIGNED' ? 'text-green-600' : r.status === 'EXPIRED' ? 'text-red-600' : 'text-yellow-600'}`}>{r.status}</span>
+      {contracts.length === 0 ? (
+        <div className="text-center py-20 text-gray-700">
+          <CheckCircle size={40} className="mx-auto mb-3 text-emerald-700" />
+          <p className="text-sm text-gray-600 font-medium">Nenhum contrato aguardando assinatura</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {contracts.map(c => (
+            <div key={c.id} className="card hover:border-white/10 transition-all">
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <Link to={`/contratos/${c.id}`} className="font-medium text-blue-400 hover:text-blue-300 transition-colors">{c.title}</Link>
+                  <p className="text-xs text-gray-600 mt-0.5">{c.relatedParty}</p>
                 </div>
-              ))}
+                <span className="badge-pending">Aguardando</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {c.signatureRequests?.map(r => {
+                  const s = SIGN_STATUS[r.status] || SIGN_STATUS.PENDING;
+                  const Icon = s.icon;
+                  return (
+                    <div key={r.id} className="flex items-center gap-3 bg-white/[0.02] rounded-lg px-3 py-2.5 border border-white/[0.04]">
+                      <Icon size={15} className={s.color} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-gray-300 font-medium truncate">{r.signerName}</p>
+                        <p className="text-xs text-gray-600 truncate">{r.signerEmail}</p>
+                      </div>
+                      <span className={s.badge}>{r.status}</span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
-
-        {contracts.length === 0 && (
-          <div className="text-center py-16 text-gray-500">
-            <CheckCircle size={40} className="mx-auto mb-3 text-gray-300" />
-            <p className="font-medium">Nenhum contrato aguardando assinatura</p>
-          </div>
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
